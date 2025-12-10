@@ -128,7 +128,7 @@ const ProjectsSection = () => {
                 My Projects
             </motion.h2>
             <motion.div 
-                className="text-white flex flex-row justify-center items-center gap-2 py-6 flex-wrap"
+                className="text-white w-full flex flex-row justify-center items-center gap-3 md:gap-4 py-6 flex-wrap text-center"
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
