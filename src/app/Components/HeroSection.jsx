@@ -138,9 +138,11 @@ const HeroSection = () => {
                 1000,
                 'Distributed Systems Dev',
                 1000,
+                'Agentic AI Engineer',
+                1000,
                 'Backend Developer',
                 1000,
-                'Flutter Developer',
+                'Data Engineer',
                 1000
               ]}
               wrapper="span"
@@ -152,7 +154,7 @@ const HeroSection = () => {
             className='text-[#ADB7BE] text-base sm:text-lg mt-4 mb-6 lg:text-xl'
             variants={itemVariants}
           >
-            I&apos;m ingesting new knowledge and leveling up my skills by pulling lessons asynchronously from the Kafka queue of experience.
+            Ingesting new knowledge and leveling up - one message at a time from the Kafka queue of experience.
           </motion.p>
           <motion.div variants={itemVariants}>
             <motion.div
@@ -162,7 +164,7 @@ const HeroSection = () => {
               className='inline-block'
             >
               <Link href="mailto:dmamritesh@gmail.com" className='px-6 py-3 w-full sm:w-fit rounded-full mr-4 bg-gradient-to-br from-blue-500 via-purple-500 to-red-500 hover:shadow-lg hover:shadow-purple-500/50 text-white transition-shadow duration-300'>
-                Contact Me
+                Contact
               </Link>
             </motion.div>
             <motion.div
@@ -171,9 +173,9 @@ const HeroSection = () => {
               variants={buttonVariants}
               className='inline-block mt-3 sm:mt-0'
             >
-              <Link href="https://drive.google.com/file/d/1hnxAe19fxdJ4-hIRyGLdqbaPNt52TrHH/view?usp=sharing">
+              <Link href="https://drive.google.com/file/d/1SrO4j8d-Np81Mh2x0hQdJNxvgmtxce3V/view?usp=sharing">
                 <button className='px-1 py-1 w-full sm:w-fit rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-red-500 hover:shadow-lg hover:shadow-purple-500/50 text-white transition-shadow duration-300'>
-                  <span className='block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2'>Download Resume</span>
+                  <span className='block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2'>Resume</span>
                 </button>
               </Link>
             </motion.div>
