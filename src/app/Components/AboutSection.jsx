@@ -10,13 +10,13 @@ const TAB_DATA = [
         id: "skills",
         content: (
             <ul className='list-disc pl-6 space-y-2'>
-                <li>Django</li>
-                <li>Flutter</li>
+                <li>Azure AI Foundry</li>
+                <li>Teams Apps</li>
                 <li>Node.js</li>
-                <li>PostgreSQL</li>
-                <li>Kubernetes</li>
+                <li>Typescript</li>
+                <li>Talend ETL</li>
+                <li>Snowflake</li>
                 <li>Kafka</li>
-                <li>Spring Boot</li>
             </ul>
         )
     },
@@ -41,8 +41,9 @@ const TAB_DATA = [
         id: "experience",
         content: (
             <ul className='list-disc pl-6 space-y-2'>
-                <li><a href="https://drive.google.com/file/d/1SZIFZf47H7deDvB4KzyUtxK_eR4_hT5G/view"><i>Software Development Engineering Intern</i>, Logistics pod, Technology function, Blinkit (previously Grofers)</a></li>
+                <li><i>Software Development Engineer</i>, Princeton IT Services</li>
                 <li><i>Teaching Assistant</i>, ECE445 Senior Design Lab (under prof.Arne Fliflet), UIUC</li>
+                <li><a href="https://drive.google.com/file/d/1SZIFZf47H7deDvB4KzyUtxK_eR4_hT5G/view"><i>Software Development Engineering Intern</i>, Logistics pod, Technology function, Blinkit (previously Grofers)</a></li>
             </ul>
         )
     },
@@ -114,6 +115,7 @@ const AboutSection = () => {
                             src='/images/Amritesh.jpeg' 
                             width={500} 
                             height={500}
+                            alt='Profile Photo'
                         />
                     </motion.div>
                 </motion.div>

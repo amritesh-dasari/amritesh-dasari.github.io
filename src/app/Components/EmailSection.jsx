@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import GithubIcon from "../../../public/github-icon.svg"
 import LinkedinIcon from "../../../public/linkedin-icon.svg"
@@ -9,34 +9,38 @@ import Image from 'next/image'
 const randomRange = (min, max) => Math.random() * (max - min) + min;
 
 const EmailSection = () => {
-    const blobMotion = useMemo(() => {
+    const [blobMotion, setBlobMotion] = useState(null);
+
+    useEffect(() => {
         const x = randomRange(12, 22);
         const y = randomRange(14, 26);
         const scale = randomRange(1.02, 1.06);
         const duration = randomRange(18, 26);
-        return {
+        setBlobMotion({
             xPath: [0, x, -x * 0.7, 0],
             yPath: [0, -y * 0.6, y, 0],
             scalePath: [1, scale, 0.98, 1],
             duration,
-        };
+        });
     }, []);
 
     return (
         <section className='grid md:grid-cols-1 my-12 md:my-12 py-24 gap-4 relative'  id="contact">
-            <motion.div
-                className='bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900 to-transparent rounded-full h-80 w-80 z-0 blur-2xl absolute top-3/4 -left-4 transform -translate-x-1/2 -translate-y-1/2'
-                animate={{
-                    x: blobMotion.xPath,
-                    y: blobMotion.yPath,
-                    scale: blobMotion.scalePath,
-                }}
-                transition={{
-                    duration: blobMotion.duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-            />
+            {blobMotion && (
+                <motion.div
+                    className='bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900 to-transparent rounded-full h-80 w-80 z-0 blur-2xl absolute top-3/4 -left-4 transform -translate-x-1/2 -translate-y-1/2'
+                    animate={{
+                        x: blobMotion.xPath,
+                        y: blobMotion.yPath,
+                        scale: blobMotion.scalePath,
+                    }}
+                    transition={{
+                        duration: blobMotion.duration,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+            )}
             <div className='z-10'>
                 <h5 className='text-xl font-bold text-white my-2'>
                     Let&apos;s Connect

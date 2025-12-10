@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 const randomRange = (min, max) => Math.random() * (max - min) + min;
 
@@ -52,8 +52,14 @@ const createOrbs = () => [
 ];
 
 const BackgroundFX = () => {
-  const particles = useMemo(() => createParticles(30), []);
-  const orbs = useMemo(() => createOrbs(), []);
+  const [particles, setParticles] = useState([]);
+  const [orbs, setOrbs] = useState([]);
+
+  useEffect(() => {
+    // Generate random paths only on the client to avoid SSR hydration mismatch
+    setParticles(createParticles(30));
+    setOrbs(createOrbs());
+  }, []);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
