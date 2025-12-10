@@ -1,11 +1,59 @@
 "use client";
-import React from 'react'
+import React, { useMemo, useRef } from 'react'
 import Image from 'next/image'
 import { TypeAnimation } from 'react-type-animation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const HeroSection = () => {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start end", "end start"],
+  });
+  const blobY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const blobX = useTransform(scrollYProgress, [0, 1], [0, 28]);
+  const shapeY = useTransform(scrollYProgress, [0, 1], [0, 32]);
+  const shapeX = useTransform(scrollYProgress, [0, 1], [0, -18]);
+  const shapeWanders = useMemo(() => [
+    {
+      size: 380,
+      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(96,165,250,0.3),rgba(76,29,149,0))] blur-3xl',
+      animate: {
+        x: [0, 18, -14, 0],
+        y: [0, -16, 10, 0],
+        scale: [1, 1.04, 0.98, 1],
+      },
+      duration: 18 + Math.random() * 6,
+      style: { top: "-8%", left: "-12%" },
+      parallax: { x: blobX, y: blobY },
+    },
+    {
+      size: 440,
+      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.28),rgba(14,165,233,0))] blur-3xl',
+      animate: {
+        x: [0, -20, 16, 0],
+        y: [0, 18, -14, 0],
+        scale: [1, 1.03, 0.99, 1],
+      },
+      duration: 20 + Math.random() * 6,
+      style: { bottom: "-18%", right: "-14%" },
+      parallax: { x: shapeX, y: shapeY },
+    },
+    {
+      size: 220,
+      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(236,72,153,0.26),rgba(59,130,246,0))] blur-3xl',
+      animate: {
+        x: [0, 14, -10, 0],
+        y: [0, -14, 12, 0],
+        scale: [1, 1.05, 0.97, 1],
+      },
+      duration: 16 + Math.random() * 6,
+      style: { top: "32%", right: "16%" },
+      parallax: { x: shapeX, y: blobY },
+    },
+  ], [blobX, blobY, shapeX, shapeY]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -58,7 +106,22 @@ const HeroSection = () => {
   };
 
   return (
-    <section className='lg:py-16'>
+    <section ref={heroRef} className='lg:py-16 relative'>
+      {/* Parallax shapes behind hero */}
+      {shapeWanders.map((shape, idx) => (
+        <motion.div
+          key={idx}
+          className="pointer-events-none absolute z-0"
+          style={{ ...shape.style, x: shape.parallax.x, y: shape.parallax.y }}
+        >
+          <motion.div
+            className={shape.className}
+            style={{ width: shape.size, height: shape.size }}
+            animate={shape.animate}
+            transition={{ duration: shape.duration, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      ))}
       <motion.div
         className='grid grid-cols-1 sm:grid-cols-12'
         variants={containerVariants}
