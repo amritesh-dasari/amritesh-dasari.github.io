@@ -6,10 +6,25 @@ const NavLink = ({ href, title, active = false, onClick }) => {
         ? "font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400"
         : "text-[#ADB7BE] hover:text-white";
 
+    const handleClick = (e) => {
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const element = document.querySelector(href);
+            if (element) {
+                const nav = document.querySelector('nav');
+                const offset = nav ? nav.offsetHeight : 0;
+                const elementTop = element.getBoundingClientRect().top + window.scrollY;
+                const targetPos = Math.max(0, elementTop - offset);
+                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+            }
+        }
+        onClick?.();
+    };
+
     return (
         <Link
             href={href}
-            onClick={onClick}
+            onClick={handleClick}
             className={`${baseClasses} ${stateClasses}`}
         >
             {title}
