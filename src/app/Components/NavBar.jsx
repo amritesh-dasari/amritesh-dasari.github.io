@@ -1,21 +1,27 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import NavLink from "./NavLink"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid"
 import MenuOverlay from "./MenuOverlay";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
-    { title: "Home", path: "#home" },
-    { title: "Current Work", path: "#current-work" },
-    { title: "About", path: "#about" },
-    { title: "Projects", path: "#projects" },
+    { title: "Home", href: "/#home", sectionId: "home" },
+    { title: "Latest Work", href: "/#latest-work", sectionId: "latest-work" },
+    { title: "About", href: "/#about", sectionId: "about" },
+    { title: "Projects", href: "/#projects", sectionId: "projects" },
+    { title: "Blog", href: "/blog" },
 ];
 
 const NavBar = () => {
+    const pathname = usePathname();
+    const sectionLinks = useMemo(() => navLinks.filter((link) => link.sectionId), []);
     const [navbarOpen, setNavbarOpen] = useState(false);
-    const [activeId, setActiveId] = useState(navLinks[0].path);
+    const [activeSection, setActiveSection] = useState(
+        pathname === "/" ? sectionLinks[0]?.sectionId ?? "" : ""
+    );
     const ignoreObserverRef = useRef(false);
 
     const navVariants = {
@@ -34,7 +40,9 @@ const NavBar = () => {
     };
 
     useEffect(() => {
-        const sections = navLinks.map((link) => document.querySelector(link.path)).filter(Boolean);
+        const sections = sectionLinks
+            .map((link) => document.getElementById(link.sectionId))
+            .filter(Boolean);
         if (!sections.length) return undefined;
 
         const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
@@ -43,8 +51,12 @@ const NavBar = () => {
                 if (ignoreObserverRef.current) return;
 
                 // If user is at the very top, ensure Home is active
-                if (typeof window !== "undefined" && (window.scrollY || window.pageYOffset) <= 40) {
-                    setActiveId("#home");
+                if (
+                    typeof window !== "undefined" &&
+                    (window.scrollY || window.pageYOffset) <= 40 &&
+                    sectionLinks[0]
+                ) {
+                    setActiveSection(sectionLinks[0].sectionId);
                     return;
                 }
 
@@ -60,7 +72,7 @@ const NavBar = () => {
                 }, null);
 
                 if (best && best.isIntersecting) {
-                    setActiveId(`#${best.target.id}`);
+                    setActiveSection(best.target.id);
                     return;
                 }
 
@@ -70,7 +82,7 @@ const NavBar = () => {
                 const below = tops.filter((t) => t.top >= 0).sort((a, b) => a.top - b.top)[0];
                 const above = tops.filter((t) => t.top < 0).sort((a, b) => b.top - a.top)[0];
                 const candidate = below || above;
-                if (candidate) setActiveId(`#${candidate.el.id}`);
+                if (candidate) setActiveSection(candidate.el.id);
             },
             { threshold: thresholds, rootMargin: "-40% 0px -40% 0px" }
         );
@@ -79,12 +91,12 @@ const NavBar = () => {
         return () => {
             observer.disconnect();
         };
-    }, []);
+    }, [sectionLinks]);
 
-    const handleNavClick = (href) => {
+    const handleNavClick = (sectionId) => {
         ignoreObserverRef.current = true;
         setTimeout(() => {
-            setActiveId(href);
+            setActiveSection(sectionId);
             setTimeout(() => (ignoreObserverRef.current = false), 80);
         }, 450);
     };
@@ -107,7 +119,11 @@ const NavBar = () => {
                 <motion.div className='menu hidden md:block md:w-auto' id='navbar' variants={navVariants}>
                     <ul className='flex p-4 md:p-1 md:flex-row md:space-x-6 mt-0'>
                         {navLinks.map((link, index) => {
-                            const isActive = activeId === link.path;
+                            const isSectionLink = Boolean(link.sectionId);
+                            const isActive = isSectionLink
+                                ? activeSection === link.sectionId
+                                : pathname === link.href;
+
                             return (
                                 <motion.li key={index} variants={linkVariants} className="relative pb-1">
                                     {isActive && (
@@ -116,7 +132,14 @@ const NavBar = () => {
                                     {isActive && (
                                         <motion.span layoutId="navUnderline" className="pointer-events-none absolute left-1 right-1 -bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-blue-400 to-purple-400" transition={{ type: "spring", stiffness: 260, damping: 30 }} />
                                     )}
-                                    <NavLink href={link.path} title={link.title} active={isActive} onClick={() => handleNavClick(link.path)} />
+                                    <NavLink
+                                        href={link.href}
+                                        title={link.title}
+                                        active={isActive}
+                                        onClick={isSectionLink ? () => handleNavClick(link.sectionId) : undefined}
+                                        sectionId={link.sectionId}
+                                        currentPath={pathname}
+                                    />
                                 </motion.li>
                             )
                         })}
@@ -125,11 +148,17 @@ const NavBar = () => {
             </div>
 
             <motion.div variants={menuVariants} initial="closed" animate={navbarOpen ? "open" : "closed"}>
-                {navbarOpen ? <MenuOverlay links={navLinks} activeId={activeId} onNavigate={() => setNavbarOpen(false)} /> : null}
+                {navbarOpen ? (
+                    <MenuOverlay
+                        links={navLinks}
+                        activeSection={activeSection}
+                        pathname={pathname}
+                        onNavigate={() => setNavbarOpen(false)}
+                    />
+                ) : null}
             </motion.div>
         </motion.nav>
     )
 }
 
 export default NavBar
-
