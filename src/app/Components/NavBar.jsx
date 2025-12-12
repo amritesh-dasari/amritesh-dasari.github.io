@@ -8,6 +8,10 @@ import { motion } from "framer-motion";
 
 const navLinks = [
     {
+        title: "Current",
+        path: "#current-work"
+    },
+    {
         title: "About",
         path: "#about"
     },
