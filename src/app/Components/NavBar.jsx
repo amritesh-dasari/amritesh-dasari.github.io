@@ -6,18 +6,23 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid"
 import MenuOverlay from "./MenuOverlay";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { isBlogEnabled } from "../lib/featureFlags";
 
-const navLinks = [
+const baseNavLinks = [
     { title: "Home", href: "/#home", sectionId: "home" },
-    { title: "Latest Work", href: "/#latest-work", sectionId: "latest-work" },
+    { title: "Latest Work", href: "/#latest-work", sectionId: "latest-work", requiresBlog: true },
     { title: "About", href: "/#about", sectionId: "about" },
     { title: "Projects", href: "/#projects", sectionId: "projects" },
-    { title: "Blog", href: "/blog" },
+    { title: "Blog", href: "/blog", requiresBlog: true },
 ];
 
 const NavBar = () => {
     const pathname = usePathname();
-    const sectionLinks = useMemo(() => navLinks.filter((link) => link.sectionId), []);
+    const navLinks = useMemo(
+        () => baseNavLinks.filter((link) => (link.requiresBlog ? isBlogEnabled : true)),
+        [isBlogEnabled]
+    );
+    const sectionLinks = useMemo(() => navLinks.filter((link) => link.sectionId), [navLinks]);
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [activeSection, setActiveSection] = useState(
         pathname === "/" ? sectionLinks[0]?.sectionId ?? "" : ""

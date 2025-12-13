@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm"
 import BackgroundFX from "../Components/BackgroundFX"
 import NavBar from "../Components/NavBar"
 import { getFirestoreDb, hasFirebaseConfig, missingFirebaseKeys } from "../lib/firebaseClient"
+import { isBlogEnabled } from "../lib/featureFlags"
 
 const resolveDate = (value) => {
   if (!value) return null
@@ -62,6 +63,11 @@ export default function BlogPage() {
   const [error, setError] = useState("")
 
   useEffect(() => {
+    if (!isBlogEnabled) {
+      setLoading(false)
+      return undefined
+    }
+
     if (!hasFirebaseConfig) {
       setError(
         `Add your Firebase client env vars (${missingFirebaseKeys.join(
@@ -109,9 +115,20 @@ export default function BlogPage() {
     }
 
     return () => unsubscribe?.()
-  }, [])
+  }, [isBlogEnabled])
 
   const content = useMemo(() => {
+    if (!isBlogEnabled) {
+      return (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-slate-200">
+          <p className="text-lg font-semibold">Blog is turned off</p>
+          <p className="mt-2 text-sm text-slate-300">
+            Set <code className="font-mono text-xs">NEXT_PUBLIC_ENABLE_BLOG=true</code> to publish your blog and latest work sections.
+          </p>
+        </div>
+      )
+    }
+
     if (error) {
       return (
         <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-5 text-red-100">
@@ -169,7 +186,7 @@ export default function BlogPage() {
         ))}
       </div>
     )
-  }, [error, loading, posts])
+  }, [error, isBlogEnabled, loading, posts])
 
   return (
     <main className="flex min-h-screen flex-col bg-[#121212] relative overflow-hidden">

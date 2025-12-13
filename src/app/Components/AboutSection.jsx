@@ -63,7 +63,7 @@ const TAB_DATA = [
 const AboutSection = () => {
     const [tab, setTab] = useState("skills");
     const [isPending, startTransition] = useTransition();
-    
+
     const handleTabChange = (id) => {
         startTransition(() => {
             setTab(id);
@@ -99,7 +99,7 @@ const AboutSection = () => {
 
     return (
         <section className='text-white' id="about">
-            <motion.div 
+            <motion.div
                 className='md:grid md:grid-cols-2 gap-8 items-center py-8 px-4 xl:gap-16 sm:py-16 sm:px-16'
                 initial="hidden"
                 whileInView="visible"
@@ -110,40 +110,37 @@ const AboutSection = () => {
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Image 
-                            className='rounded-full bg-[#181818] shadow-2xl shadow-purple-500/20' 
-                            src='/images/Amritesh.jpeg' 
-                            width={500} 
+                        <Image
+                            className='rounded-full bg-[#181818] shadow-2xl shadow-purple-500/20'
+                            src='/images/Amritesh.jpeg'
+                            width={500}
                             height={500}
                             alt='Profile Photo'
                         />
                     </motion.div>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                     className='mt-4 md:mt-0 text-left flex flex-col h-full'
                     variants={contentVariants}
                 >
-                    <motion.h2 
+                    <motion.h2
                         className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 mb-4'
                         variants={itemVariants}
                         custom={0}
                     >
                         About Me
                     </motion.h2>
-                    
-                    <motion.p 
+
+                    <motion.p
                         className='text-base lg:text-lg text-justify text-[#ADB7BE]'
                         variants={itemVariants}
                         custom={1}
                     >
-                        I am a distributed systems engineer and backend developer with experience in technologies like Python,
-                        Kafka, PostgreSQL, Docker, Kubernetes, React, Django, and more. I have a passion for creating resilient and
-                        fault-tolerant systems. As a lifelong learner, I continuously expand my knowledge and skills including machine learning,
-                        web development, and cloud technologies to take on new challenges. I am an excellent team player who approaches work in a punctual and efficient manner.
+                        I am a software engineer specializing in distributed systems, backend development, and full-stack engineering. My experience spans Python, Kafka, Docker, Kubernetes, PostgreSQL, Flask, React, and cloud-native tooling. I have built scalable systems - from a distributed machine learning cluster to production ready chatbots, data extraction pipelines, and DNS security tools. With a strong foundation in distributed and cloud systems from my graduate program at UIUC, I focus on creating resilient, efficient, and automated solutions. I’m a continuous learner who enjoys tackling complex problems, improving data workflows, and delivering reliable, well-engineered systems as part of collaborative teams.
                     </motion.p>
 
-                    <motion.div 
+                    <motion.div
                         className='flex flex-row mt-5 gap-2 flex-wrap'
                         variants={itemVariants}
                         custom={2}
@@ -170,7 +167,7 @@ const AboutSection = () => {
                         </TabButton>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         className='mt-4'
                         key={tab}
                         initial={{ opacity: 0, y: 10 }}

@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getFirestoreDb, hasFirebaseConfig, missingFirebaseKeys } from "../lib/firebaseClient";
+import { isBlogEnabled } from "../lib/featureFlags";
 
 const fallbackCards = [
     {
@@ -77,6 +78,11 @@ const LatestWorkSection = () => {
     const [error, setError] = useState("");
 
     useEffect(() => {
+        if (!isBlogEnabled) {
+            setLoading(false);
+            return undefined;
+        }
+
         if (!hasFirebaseConfig) {
             setError(
                 `Add Firebase env vars (${missingFirebaseKeys.join(
@@ -117,13 +123,17 @@ const LatestWorkSection = () => {
             setLoading(false);
             return undefined;
         }
-    }, []);
+    }, [isBlogEnabled]);
 
     const displayItems = useMemo(() => {
         if (items.length) return items;
         if (loading) return [{ id: "loading-1" }, { id: "loading-2" }, { id: "loading-3" }];
         return fallbackCards;
     }, [items, loading]);
+
+    if (!isBlogEnabled) {
+        return null;
+    }
 
     return (
         <section id="latest-work" className="text-white mt-12 md:mt-16">
