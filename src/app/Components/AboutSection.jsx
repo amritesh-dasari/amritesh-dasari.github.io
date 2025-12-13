@@ -137,7 +137,11 @@ const AboutSection = () => {
                         variants={itemVariants}
                         custom={1}
                     >
-                        I am a software engineer specializing in distributed systems, backend development, and full-stack engineering. My experience spans Python, Kafka, Docker, Kubernetes, PostgreSQL, Flask, React, and cloud-native tooling. I have built scalable systems - from a distributed machine learning cluster to production ready chatbots, data extraction pipelines, and DNS security tools. With a strong foundation in distributed and cloud systems from my graduate program at UIUC, I focus on creating resilient, efficient, and automated solutions. I’m a continuous learner who enjoys tackling complex problems, improving data workflows, and delivering reliable, well-engineered systems as part of collaborative teams.
+                        I am a software engineer specializing in distributed systems, backend development, and full-stack engineering. 
+                        My experience spans Python, Kafka, Docker, Kubernetes, PostgreSQL, Flask, React, and cloud-native tooling. 
+                        I have built scalable systems - from a distributed machine learning cluster to production ready chatbots, data extraction pipelines, and DNS security tools. 
+                        With a strong foundation in distributed and cloud systems from my graduate program at UIUC, I focus on creating resilient, efficient, and automated solutions. 
+                        I am a continuous learner who enjoys tackling complex problems, improving data workflows, and delivering reliable, well-engineered systems as part of collaborative teams.
                     </motion.p>
 
                     <motion.div
