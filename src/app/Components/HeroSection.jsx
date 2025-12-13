@@ -106,7 +106,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={heroRef} className='lg:py-16 relative'>
+    <section id="home" ref={heroRef} className='lg:py-16 relative'>
       {/* Parallax shapes behind hero */}
       {shapeWanders.map((shape, idx) => (
         <motion.div

@@ -4,7 +4,9 @@ import NavBar from './Components/NavBar'
 import AboutSection from './Components/AboutSection'
 import ProjectsSection from './Components/ProjectsSection'
 import EmailSection from './Components/EmailSection'
+import LatestWorkSection from './Components/CurrentWorkSection'
 import BackgroundFX from './Components/BackgroundFX'
+import { isBlogEnabled } from './lib/featureFlags'
 
 export default function Home() {
   return (
@@ -13,6 +15,7 @@ export default function Home() {
       <NavBar />
       <div className='container mt-24 mx-auto px-12 py-4'>
         <HeroSection />
+        {isBlogEnabled && <LatestWorkSection />}
         <AboutSection />
         <ProjectsSection />
         <EmailSection />
