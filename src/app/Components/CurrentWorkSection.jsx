@@ -150,9 +150,9 @@ const LatestWorkSection = () => {
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent">
                     Latest from the Blog
                 </h2>
-                <p className="text-[#ADB7BE] max-w-2xl">
+                {/* <p className="text-[#ADB7BE] max-w-2xl">
                     Streaming the newest three published posts so visitors see what you shipped most recently.
-                </p>
+                </p> */}
                 {error && (
                     <p className="text-sm text-red-300/90">
                         {error}

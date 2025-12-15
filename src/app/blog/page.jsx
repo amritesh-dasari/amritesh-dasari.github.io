@@ -202,7 +202,7 @@ export default function BlogPage() {
             Blog
           </h1>
           <p className="mt-3 text-lg text-slate-300 max-w-2xl mx-auto">
-            Posts stream in directly from your Firestore <span className="font-semibold">posts</span> collection, so new entries appear without redeploying your static site.
+            Check back later for updated Blogposts.
           </p>
         </header>
 
