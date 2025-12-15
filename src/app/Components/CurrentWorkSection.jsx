@@ -144,9 +144,9 @@ const LatestWorkSection = () => {
                 transition={{ duration: 0.6 }}
                 className="flex flex-col gap-3 mb-8 md:mb-12"
             >
-                <p className="text-sm uppercase tracking-[0.2em] text-purple-300/80">
+                {/* <p className="text-sm uppercase tracking-[0.2em] text-purple-300/80">
                     Latest Work
-                </p>
+                </p> */}
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent">
                     Latest from the Blog
                 </h2>

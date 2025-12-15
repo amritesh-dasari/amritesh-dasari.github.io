@@ -17,7 +17,7 @@ export default function Home() {
         <HeroSection />
         {isBlogEnabled && <LatestWorkSection />}
         <AboutSection />
-        <ProjectsSection />
+        {/* <ProjectsSection /> */}
         <EmailSection />
       </div>
     </main>

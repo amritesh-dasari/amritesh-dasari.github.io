@@ -100,7 +100,7 @@ const AboutSection = () => {
     return (
         <section className='text-white' id="about">
             <motion.div
-                className='md:grid md:grid-cols-2 gap-8 items-center py-8 px-4 xl:gap-16 sm:py-16 sm:px-16'
+                className='md:grid md:grid-cols-2 gap-8 items-start py-8 px-4 xl:gap-16 sm:py-16 sm:px-16'
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.3 }}
@@ -172,7 +172,7 @@ const AboutSection = () => {
                     </motion.div>
 
                     <motion.div
-                        className='mt-4'
+                        className='mt-4 min-h-[220px]'
                         key={tab}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
