@@ -195,14 +195,14 @@ export default function BlogPage() {
 
       <section className="container mx-auto px-6 md:px-12 mt-24 mb-16 relative">
         <header className="mb-10 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-200/80">
+          {/* <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-200/80">
             Notes & Updates
-          </p>
-          <h1 className="mt-3 text-4xl md:text-5xl font-bold text-white">
-            Blog
+          </p> */}
+          <h1 className="mt-3 text-4xl md:text-5xl font-bold text-purple-200/80">
+            Blog Site
           </h1>
           <p className="mt-3 text-lg text-slate-300 max-w-2xl mx-auto">
-            Posts stream in directly from your Firestore <span className="font-semibold">posts</span> collection, so new entries appear without redeploying your static site.
+            Check back later for updated Blogposts.
           </p>
         </header>
 

@@ -25,7 +25,7 @@ const EmailSection = () => {
     }, []);
 
     return (
-        <section className='grid md:grid-cols-1 my-12 md:my-12 py-24 gap-4 relative'  id="contact">
+        <section className='grid md:grid-cols-1 my-12 md:my-12 py-12 gap-4 relative'  id="contact">
             {blobMotion && (
                 <motion.div
                     className='bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900 to-transparent rounded-full h-80 w-80 z-0 blur-2xl absolute top-3/4 -left-4 transform -translate-x-1/2 -translate-y-1/2'

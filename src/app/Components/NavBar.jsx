@@ -12,7 +12,7 @@ const baseNavLinks = [
     { title: "Home", href: "/#home", sectionId: "home" },
     { title: "Latest Work", href: "/#latest-work", sectionId: "latest-work", requiresBlog: true },
     { title: "About", href: "/#about", sectionId: "about" },
-    { title: "Projects", href: "/#projects", sectionId: "projects" },
+    { title: "Projects", href: "/projects" },
     { title: "Blog", href: "/blog", requiresBlog: true },
 ];
 
