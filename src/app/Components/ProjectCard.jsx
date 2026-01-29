@@ -3,55 +3,55 @@ import { CodeBracketIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-const ProjectCard = ({ title, description, gitUrl }) => {
-    const cardVariants = {
-        initial: { opacity: 0, scale: 0.95 },
-        animate: { opacity: 1, scale: 1 },
-    };
-
+const ProjectCard = ({ title, description, gitUrl, tags = [] }) => {
     return (
-        <motion.div
-            variants={cardVariants}
-            className="h-full"
+        <motion.article
+            className="group h-full rounded-xl bg-background-secondary border border-border-subtle hover:border-border-hover transition-all duration-300 overflow-hidden"
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.3 }}
         >
-            <div
-                className="h-52 md:h-72 rounded-t-xl relative group bg-gradient-to-br from-blue-800 via-purple-800 to-red-800 overflow-hidden"
-            >
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-blue-600 via-purple-600 to-red-600" />
-                
-                <div className="text-center absolute top-0 left-0 w-full h-full text-xl font-bold text-white mt-4 mb-8 md:mb-12 z-10">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            {/* Accent line at top */}
+            <div className="h-0.5 w-full bg-gradient-to-r from-accent-primary/50 to-transparent" />
+
+            <div className="p-6">
+                {/* Header row */}
+                <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-lg font-medium text-text-primary group-hover:text-accent-primary transition-colors duration-300 flex-1 pr-4">
                         {title}
-                    </div>
+                    </h3>
+
+                    {/* GitHub link */}
+                    <Link
+                        href={gitUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 text-text-tertiary hover:text-accent-primary transition-colors duration-300 -mr-2 -mt-1"
+                        aria-label="View on GitHub"
+                    >
+                        <CodeBracketIcon className="w-5 h-5" />
+                    </Link>
                 </div>
 
-                {/* Glassmorphism overlay with blur effect */}
-                <motion.div 
-                    className="overlay items-center justify-center absolute top-0 left-0 w-full h-full bg-[#181818]/40 backdrop-blur-sm hidden group-hover:flex transition-all duration-500 z-20"
-                    initial={{ backdropFilter: 'blur(0px)' }}
-                    whileHover={{ backdropFilter: 'blur(10px)' }}
-                >
-                    <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <Link
-                            href={gitUrl}
-                            className="h-14 w-14 mr-2 border-2 relative rounded-full border-[#ADB7BE] hover:border-white group/link transition-all duration-300 shadow-lg shadow-purple-500/50"
-                        >
-                            <CodeBracketIcon className="h-10 w-10 text-[#ADB7BE] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group-hover/link:text-white transition-colors duration-300" />
-                        </Link>
-                    </motion.div>
-                </motion.div>
-            </div>
+                {/* Description */}
+                <p className="text-sm text-text-secondary leading-relaxed mb-4">
+                    {description}
+                </p>
 
-            {/* Modern card with improved styling */}
-            <div className="text-white rounded-b-xl bg-[#181818] bg-opacity-80 backdrop-blur-sm py-6 px-4 border border-white/10 hover:border-purple-500/30 transition-colors duration-300">
-                <h5 className="text-xl font-semibold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">{title}</h5>
-                <p className="text-[#ADB7BE] text-sm leading-relaxed">{description}</p>
+                {/* Tech tags */}
+                {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-2.5 py-1 text-xs text-text-tertiary bg-background-tertiary rounded-md"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
             </div>
-        </motion.div>
+        </motion.article>
     )
 }
 

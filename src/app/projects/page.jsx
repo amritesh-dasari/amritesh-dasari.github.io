@@ -3,205 +3,265 @@
 import BackgroundFX from "../Components/BackgroundFX";
 import NavBar from "../Components/NavBar";
 import { motion } from "framer-motion";
+import { fadeUp, staggerContainer, lineScale } from "../lib/animations";
 
 const PROJECT_SECTIONS = [
   {
-    title: "Client Delivery · Princeton IT Services",
+    title: "Princeton IT Services",
+    subtitle: "Software Development Engineer",
     period: "Feb 2024 - Present",
     items: [
       {
-        name: "NOVA · Teams AI Chatbot",
-        context: "Enterprise chatbot for Connor Strong & Buckelew",
-        stack: ["Azure OpenAI", "Teams SSO", "Graph API", "Key Vault", "Bicep"],
+        name: "NOVA - Teams AI Chatbot",
+        context: "Conner Strong & Buckelew",
+        stack: ["Teams AI", "Azure OpenAI", "Document Intelligence", "Graph API", "Key Vault"],
         bullets: [
-          "Integrated Azure Document Intelligence into a Teams app to process user-uploaded files end-to-end.",
-          "Moved the bot to a single-tenant identity model and wired Graph API access via an Entra app to safely shuttle files.",
-          "Shifted secrets to Key Vault and templated runtime env delivery with bicep for safer deployments."
+          "Integrated Document Intelligence into a Teams Chatbot Application to enable Document Processing.",
+          "Migrated the Chatbot from a User-Assigned Managed Identity type to a SingleTenant type Bot.",
+          "Implemented Graph API access via an Entra App to allow the chatbot to move files to a temporary location.",
+          "Moved Secret Keys and API endpoints to Azure KeyVault and integrated it with bicep code to get env variables during runtime of deployment."
         ]
       },
       {
         name: "Latista Data Extraction & Dashboard",
         context: "Clark Construction",
-        stack: ["Python", "Box SDK", "Snowflake", "PDFPlumber", "Camelot", "Streamlit", "React"],
+        stack: ["Python", "Box SDK", "Snowflake", "PDFPlumber", "Streamlit"],
         bullets: [
-          "Automated archival pulls from Oracle dumps via Box SDK, cleaned the data, and landed it in Snowflake.",
-          "Used multiprocessing to extract text/images from PDFs and generated entity relationships from JSON payloads.",
-          "Built a Streamlit/React dashboard to expose the Latista dataset to non-technical users."
+          "Designed a script using Box SDK to connect and get a copy of Latista Archival Data from Oracles Data Dump.",
+          "Automated importing data from Box, cleaning the data and exporting it to Snowflake Datawarehouse.",
+          "Created scripts to extract and analyze JSON objects and generate entity relationships from the data.",
+          "Utilized Multiprocessing to extract text and images from PDF reports using PDFPlumber and Camelot.",
+          "Explored and developed a User-Friendly Dashboard view to show the Latista Data using Streamlit and React."
         ]
       },
       {
-        name: "SAP BO → Power BI Migration",
-        context: "Power BI paginated reports at scale",
-        stack: ["Power Automate", "Power BI", "Snowflake"],
+        name: "SAP BO to Power BI Migration",
+        context: "Clark Construction",
+        stack: ["Power Automate", "Power BI", "Snowflake", "SQL"],
         bullets: [
-          "Designed a Power Automate flow to export 2000+ paginated reports in under 2 hours.",
-          "Rebuilt KPI reports from SAP BO into Power BI dashboards backed by Snowflake data models.",
-          "Introduced parameterized reports and data masking to protect sensitive fields while keeping exports flexible."
+          "Designed a Power Automate flow to optimize exporting 2000 Power Bi Paginated Report in under 2 hours.",
+          "Converted KPI Reports from SAP BO to Power Bi Report Dashboard by connecting data from Snowflake.",
+          "Developed Parametrized Paginated Reports to allow for easy report extraction of Data Dashboard.",
+          "Explored and Implemented Data Masking techniques to hide sensitive and irrelevant data from the reports."
         ]
       },
       {
         name: "Data Quality Analysis",
-        context: "Procore → Snowflake transfers",
-        stack: ["SQL", "Snowflake", "Python"],
+        context: "Clark Construction",
+        stack: ["Snowflake", "SQL", "Python", "Talend ETL"],
         bullets: [
-          "Established metrics to compare parallel data flows and surfaced drifts between Procore and Snowflake.",
-          "Authored complex SQL to capture history (travel feature) and trend analysis for ongoing QA.",
-          "Prototyped Snowflake notebook automation to generate daily stats for downstream teams."
+          "Established Metrics to analyze transfer between two different data flows.",
+          "Designed Complex SQL queries to get required data points for the metrics.",
+          "Utilized Snowflake's Time-Travel feature to get historical data points to establish trends of both flows.",
+          "Explored automation of scripts using Snowflake notebooks to generate stats daily for further analysis."
         ]
       },
       {
-        name: "SecureDNS · DNS Record Validator & Generator",
-        context: "Internal security tool",
+        name: "SecureDNS - DNS Record Validator",
+        context: "Internal Security Tool",
         stack: ["Python", "Cryptography", "Flask", "AWS Lambda", "Zappa"],
         bullets: [
-          "Built a validator to audit existing DNS records for DMARC, DKIM, and SPF compliance.",
-          "Added a guided DNS record generator (cryptography-backed) and deployed the app with Flask + Lambda via Zappa."
+          "Developed a security tool to check and validate existing DNS Records for DMARC, DKIM and SPF Records.",
+          "Implemented a user-friendly DNS Records Generation tool utilizing the Cryptography library in Python.",
+          "Deployed the application using Flask, Zappa and AWS Lambda to a domain owned by Princeton IT Services."
         ]
       }
     ]
   },
   {
-    title: "Systems & Research",
+    title: "Blinkit (previously Grofers)",
+    subtitle: "Software Development Engineering Intern",
+    period: "Jan 2022 - Jul 2022",
     items: [
       {
-        name: "BCFL · Blockchain-based Federated Learning",
-        context: "Python, gRPC",
-        stack: ["Distributed Ledger", "Proof-of-Work", "Python", "gRPC"],
+        name: "Live Order Tracking",
+        context: "Real-time location plotting",
+        stack: ["Python", "Kafka", "Redis"],
         bullets: [
-          "Replaced the FL central server with PoW-validated miners and a distributed ledger for model updates.",
-          "Tracked model versions over time to harden integrity and reliability in federated settings."
+          "Built a live order tracking feature with real-time location plotting for delivery updates.",
+          "Helped deploy Nyaala, a new message delivery service replacing the older messaging queue.",
+          "integrated the tracking polyline to the frontend CRM Dashboard used by customer support agents."
         ]
       },
+      {
+        name: "Rate-Card Automation & New User Onboarding",
+        context: "User Management and Automation",
+        stack: ["Celery", "Celery-Beat", "Redis"],
+        bullets: [
+          "Created CRON jobs for rate-card updates based on time and source of changes.",
+          "Automated user sorting and inactivation based on invalid or unavailable documents.",
+          "Implemented new Background Verification system to simplify new user onboarding."
+        ]
+      }
+    ]
+  },
+  {
+    title: "Personal Projects",
+    items: [
       {
         name: "Distributed Machine Learning Cluster",
-        context: "10-node fault-aware cluster",
+        context: "10-node fault-tolerant Distributed System",
         stack: ["Python", "Sockets", "PyTorch", "Multithreading"],
         bullets: [
-          "Implemented a log-saver program to capture crashes and a failure detector for simultaneous/cascading node faults.",
-          "Designed SDFS, a versioned, replicated file system to back the cluster’s training artifacts.",
-          "Ran multi-model distributed training with built-in failure detection and storage resilience."
-        ]
-      }
-    ]
-  },
-  {
-    title: "Apps & Tools",
-    items: [
-      {
-        name: "Chat-Time",
-        context: "Real-time chat web app",
-        stack: ["React", "Node.js", "Appwrite"],
-        bullets: [
-          "Used client-server subscriptions for real-time messaging and added message deletion by ID."
+          "Implemented a log-saver program in a 10-node distributed system to log machine crashes.",
+          "Programmed a failure detector to detect simultaneous and cascading node failures.",
+          "Designed SDFS, a versioned file system with replication for efficient storage.",
+          "Built a multi-model distributed ML cluster with integrated failure detection."
         ]
       },
       {
-        name: "VTOP-Extended",
-        context: "Campus companion app",
-        stack: ["Flutter", "Firebase"],
+        name: "BCFL - Blockchain-based Federated Learning",
+        context: "Distributed Systems Research",
+        stack: ["Python", "gRPC", "Blockchain", "Proof-of-Work"],
         bullets: [
-          "Centralized VIT student services with auth, club/event management, faculty DB, web view, and online quiz module."
+          "Researched improving security and reliability of federated learning implementations.",
+          "Incorporated a distributed ledger to track model updates over time.",
+          "Replaced the central server concept with a group of miners.",
+          "Validated model updates using Proof-of-Work on the miners."
         ]
       },
       {
         name: "Blog Application",
-        context: "REST API backend",
-        stack: ["Java", "Spring Boot", "MySQL"],
+        context: "Spring Boot based Backend REST API Service",
+        stack: ["Java", "Spring Boot", "MySQL", "JWT"],
         bullets: [
-          "Delivered CRUD, pagination, sorting, JWT auth, and role-based security with clean DTOs and exception handling."
+          "Developed RESTful APIs with Spring Boot implementing CRUD, pagination, sorting, authentication.",
+          "Implemented role-based security for APIs using JWT and Spring Security for authentication.",
+          "Utilized Lombok, DTOs, exception handling for code readability, maintainability, and error management.",
+          "Configured one-to-many and many-to-many JPA mappings for complex data modeling within the application."
+        ]
+      },
+      {
+        name: "Chat-Time",
+        context: "Full Stack Real-time chat app",
+        stack: ["React", "Node.js", "Appwrite Cloud"],
+        bullets: [
+          "Coded a real-time Chat application hosted as a website based on react framework.",
+          "Explored various features presented by the Appwrite Cloud Service.",
+          "Used client-server subscription model to implement real-time nature of the app.",
+          "Implemented message deletion feature allowing users to delete their messages based on messageid."
+        ]
+      },
+      {
+        name: "VTOP-Extended",
+        context: "Campus companion app for VIT",
+        stack: ["Flutter", "Firebase"],
+        bullets: [
+          "Developed a comprehensive Android application serving as a centralized solution for Vellore Institute of Technology.",
+          "Enforced authentication to identify users and save their app preferences using Firebase Authentication.",
+          "Integrated features include club management, event reminders, and a comprehensive faculty database.",
+          "Implemented additional features, including a web view for the Campus VTOP Portal and an online quiz platform."
         ]
       }
     ]
   }
 ];
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, delay: i * 0.08 }
-  })
-};
-
 export default function ProjectsPage() {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col bg-[#121212] relative overflow-hidden">
+    <main className="flex min-h-screen flex-col bg-background-primary relative overflow-hidden">
       <BackgroundFX />
       <NavBar />
 
-      <section className="container mx-auto px-6 md:px-12 mt-24 mb-16 relative">
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 w-full mt-20 mb-12 relative">
+        {/* Page header */}
         <motion.header
-          className="mb-12 text-center"
+          className="mb-8"
           initial="hidden"
           animate="visible"
-          variants={fadeIn}
+          variants={staggerContainer}
         >
-          {/* <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-200/80">
-            Project Portfolio
-          </p> */}
-          <h1 className="mt-3 text-4xl md:text-5xl font-bold text-purple-200/80">
+          <motion.h1
+            variants={fadeUp}
+            className="text-3xl lg:text-4xl font-bold text-text-primary mb-3"
+          >
             Projects
-          </h1>
-          <p className="mt-3 text-lg text-slate-300 max-w-2xl mx-auto">
-            High-level overview of my most recent Projects.
-          </p>
+          </motion.h1>
+          <motion.div variants={lineScale} className="w-12 h-0.5 bg-accent-primary mb-4" />
+          <motion.p
+            variants={fadeUp}
+            className="text-base text-text-secondary w-full"
+          >
+            A detailed overview of my professional and personal projects.
+          </motion.p>
         </motion.header>
 
-        <div className="space-y-10">
-          {PROJECT_SECTIONS.map((section, sectionIdx) => (
+        {/* Project sections */}
+        <div className="space-y-8">
+          {PROJECT_SECTIONS.map((section) => (
             <motion.div
               key={section.title}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeIn}
-              custom={sectionIdx * 0.5}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8 shadow-xl shadow-purple-500/10"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={staggerContainer}
+              className="rounded-xl border border-border-subtle bg-background-secondary p-5 lg:p-6"
             >
-              <div className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
-                <div>
-                  <h2 className="text-2xl font-semibold text-white">{section.title}</h2>
+              {/* Section header */}
+              <motion.div variants={fadeUp} className="mb-4">
+                <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-text-primary">
+                      {section.title}
+                    </h2>
+                    {section.subtitle && (
+                      <p className="text-text-tertiary">{section.subtitle}</p>
+                    )}
+                  </div>
                   {section.period && (
-                    <p className="text-sm text-slate-300 mt-1">{section.period}</p>
+                    <p className="text-sm text-text-tertiary mt-1 md:mt-0">
+                      {section.period}
+                    </p>
                   )}
                 </div>
-                {/* <div className="flex flex-wrap gap-2 text-xs text-purple-200/80">
-                  <span className="rounded-full border border-purple-400/30 px-3 py-1 bg-purple-500/10">
-                    {section.items.length} initiatives
-                  </span>
-                </div> */}
-              </div>
+              </motion.div>
 
-              <div className="mt-5 space-y-6">
-                {section.items.map((item, itemIdx) => (
+              {/* Project items */}
+              <div className="space-y-3">
+                {section.items.map((item) => (
                   <motion.article
                     key={item.name}
-                    className="rounded-xl border border-white/10 bg-[#0f0f15]/80 p-5 md:p-6"
-                    variants={fadeIn}
-                    custom={itemIdx * 0.12}
+                    variants={cardVariants}
+                    className="rounded-lg border border-border-subtle bg-background-tertiary/50 p-4 hover:border-border-hover transition-colors duration-300"
                   >
-                    <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+                    {/* Project header */}
+                    <div className="flex flex-col gap-1.5 md:flex-row md:items-start md:justify-between mb-2">
                       <div>
-                        <h3 className="text-lg font-semibold text-white">{item.name}</h3>
-                        <p className="text-sm text-slate-300">{item.context}</p>
+                        <h3 className="text-base font-medium text-text-primary">
+                          {item.name}
+                        </h3>
+                        <p className="text-xs text-text-tertiary">{item.context}</p>
                       </div>
-                      {item.stack?.length ? (
-                        <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
+                      {item.stack?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-1.5 md:mt-0">
                           {item.stack.map((tech) => (
                             <span
                               key={tech}
-                              className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-200 border border-white/10"
+                              className="px-2 py-0.5 text-xs text-text-tertiary bg-background-primary rounded border border-border-subtle"
                             >
                               {tech}
                             </span>
                           ))}
                         </div>
-                      ) : null}
+                      )}
                     </div>
-                    <ul className="mt-3 space-y-2 text-sm text-slate-200 list-disc list-inside">
+
+                    {/* Bullets */}
+                    <ul className="space-y-1 text-sm text-text-secondary">
                       {item.bullets.map((bullet, idx) => (
-                        <li key={idx}>{bullet}</li>
+                        <li key={idx} className="flex gap-2">
+                          <span className="text-accent-primary mt-1 flex-shrink-0">•</span>
+                          <span>{bullet}</span>
+                        </li>
                       ))}
                     </ul>
                   </motion.article>

@@ -1,90 +1,112 @@
 "use client";
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import GithubIcon from "../../../public/github-icon.svg"
-import LinkedinIcon from "../../../public/linkedin-icon.svg"
-import Link from 'next/link'
+import React from 'react'
 import Image from 'next/image'
-
-const randomRange = (min, max) => Math.random() * (max - min) + min;
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { fadeUp, staggerContainer, lineScale } from '../lib/animations';
 
 const EmailSection = () => {
-    const [blobMotion, setBlobMotion] = useState(null);
-
-    useEffect(() => {
-        const x = randomRange(12, 22);
-        const y = randomRange(14, 26);
-        const scale = randomRange(1.02, 1.06);
-        const duration = randomRange(18, 26);
-        setBlobMotion({
-            xPath: [0, x, -x * 0.7, 0],
-            yPath: [0, -y * 0.6, y, 0],
-            scalePath: [1, scale, 0.98, 1],
-            duration,
-        });
-    }, []);
-
     return (
-        <section className='grid md:grid-cols-1 my-12 md:my-12 py-12 gap-4 relative'  id="contact">
-            {blobMotion && (
+        <section id="contact" className='min-h-screen snap-start scroll-mt-24 pt-24 pb-16 lg:pt-28 lg:pb-20 border-t border-border-subtle'>
+            <div className="max-w-4xl mx-auto px-6 lg:px-12 w-full">
                 <motion.div
-                    className='bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900 to-transparent rounded-full h-80 w-80 z-0 blur-2xl absolute top-3/4 -left-4 transform -translate-x-1/2 -translate-y-1/2'
-                    animate={{
-                        x: blobMotion.xPath,
-                        y: blobMotion.yPath,
-                        scale: blobMotion.scalePath,
-                    }}
-                    transition={{
-                        duration: blobMotion.duration,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                />
-            )}
-            <div className='z-10'>
-                <h5 className='text-xl font-bold text-white my-2'>
-                    Let&apos;s Connect
-                </h5>
-                <span className='text-[#ADB7BE] mb-4 max-w-md'>
-                    {" "}
-                    I&apos;m currently looking for new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I&apos;ll get back to you as soon as I can! Feel free to reach out to me at <a href = "mailto: dmamritesh@gmail.com" className='text-white'>dmamritesh@gmail.com</a>
-                </span>
-                <div className='socials flex flex-row gap-2 my-2'>
-                    <Link href="https://github.com/amritesh-dasari">
-                        <Image src={GithubIcon} alt='Github Icon' />
-                    </Link>
-                    <Link href="https://www.linkedin.com/in/amritesh-dasari">
-                        <Image src={LinkedinIcon} alt='Linkedin Icon' />
-                    </Link>
-                </div>
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                    variants={staggerContainer}
+                    className="w-full flex flex-col items-center text-center gap-6 lg:gap-7"
+                >
+                    {/* Center image */}
+                    <motion.div variants={fadeUp} className="relative">
+                        <div className="absolute -inset-4 bg-gradient-to-br from-accent-primary/20 via-accent-primary/5 to-transparent rounded-full blur-2xl" />
+                        <div className="relative h-44 w-44 sm:h-52 sm:w-52 lg:h-64 lg:w-64 rounded-full border border-border-subtle bg-background-secondary/50 flex items-center justify-center overflow-hidden">
+                            <Image
+                                src="/images/Himemoji.png"
+                                alt="Himemoji"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
+                    </motion.div>
+
+                    {/* Section header */}
+                    <motion.h2
+                        variants={fadeUp}
+                        className='text-3xl lg:text-4xl font-semibold text-text-primary'
+                    >
+                        Get in Touch
+                    </motion.h2>
+                    <motion.div variants={lineScale} className='w-12 h-1 bg-accent-primary rounded-full' />
+
+                    {/* Description */}
+                    <motion.p
+                        variants={fadeUp}
+                        className='text-lg text-text-secondary leading-relaxed max-w-2xl'
+                    >
+                        Currently open to new opportunities. Whether you have a question or want to collaborate, feel free to reach out.
+                    </motion.p>
+
+                    {/* Email link */}
+                    <motion.a
+                        variants={fadeUp}
+                        href="mailto:dmamritesh@gmail.com"
+                        className='inline-flex items-center gap-2 text-accent-primary hover:text-accent-secondary transition-colors duration-300 text-lg font-semibold'
+                    >
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            />
+                        </svg>
+                        dmamritesh@gmail.com
+                    </motion.a>
+
+                    {/* Social links */}
+                    <motion.div variants={fadeUp} className='flex gap-3 mt-2'>
+                        <Link
+                            href="https://github.com/amritesh-dasari"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='p-3 bg-background-secondary rounded-lg border border-border-subtle hover:border-accent-primary/30 hover:bg-background-hover transition-all duration-300'
+                            aria-label="GitHub"
+                        >
+                            <svg
+                                className="w-5 h-5 text-text-secondary"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </Link>
+                        <Link
+                            href="https://www.linkedin.com/in/amritesh-dasari"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='p-3 bg-background-secondary rounded-lg border border-border-subtle hover:border-accent-primary/30 hover:bg-background-hover transition-all duration-300'
+                            aria-label="LinkedIn"
+                        >
+                            <svg
+                                className="w-5 h-5 text-text-secondary"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </Link>
+                    </motion.div>
+                </motion.div>
             </div>
-            {/* <div>
-                <form className='flex flex-col'>
-                    <div className='mb-6'>
-                        <label htmlFor="email" className='text-white block text-sm mb-2 font-medium'>
-                            Your Email
-                        </label>
-                        <input type='email' id='email' required placeholder='dummy@email.com' className='bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5' />
-                    </div>
-                    <div className='mb-6'>
-                        <label htmlFor="subject" className='text-white block text-sm mb-2 font-medium'>
-                            Subject
-                        </label>
-                        <input type='text' id='subject' required placeholder='Opportunity Available!' className='bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5' />
-                    </div>
-                    <div className='mb-6'>
-                        <label htmlFor="message" className='text-white block text-sm mb-2 font-medium'>
-                            Your Message
-                        </label>
-                        <textarea name="message" id="message" placeholder="Let's connect regarding this opportunity!" className='bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5' />
-                    </div>
-                    <div>
-                        <button type="submit" className='bg-purple-500 hover:bg-purple-600 text-white font-medium py-2.5 px-5 rounded-lg w-full'>
-                            Send Message
-                        </button>
-                    </div>
-                </form>
-            </div> */}
         </section>
     )
 }

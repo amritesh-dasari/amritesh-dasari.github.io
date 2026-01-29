@@ -3,190 +3,129 @@ import React, { useState, useRef } from "react";
 import ProjectCard from "./ProjectCard";
 import ProjectTag from "./ProjectTag";
 import { motion, useInView } from "framer-motion";
+import { fadeUp, staggerContainer, lineScale } from "../lib/animations";
 
 const projectsData = [
     {
         id: 1,
         title: "NOVA Teams Chatbot",
-        description: "NOVA is a Teams-based AI chatbot that uses Azure Document Intelligence, Teams SSO, and Graph API to analyze user-shared files and deliver structured insights directly within Teams.",
+        description: "Teams-based AI chatbot using Azure Document Intelligence, Teams SSO, and Graph API to analyze user-shared files and deliver structured insights.",
         tag: ["All", "AI"],
+        stack: ["Azure OpenAI", "Teams SSO", "Graph API"],
         gitUrl: "https://github.com/amritesh-dasari/",
     },
     {
         id: 2,
-        title: "AURA Teams Chatbot",
-        description: "AURA is a Teams-based AI agent that uses Azure OpenAI and a RAG pipeline to search, retrieve, and deliver context-aware answers from SharePoint and OneDrive content.",
-        tag: ["All", "AI"],
-        gitUrl: "https://github.com/amritesh-dasari/",
+        title: "Distributed ML Cluster",
+        description: "10-node distributed machine learning system with integrated failure detection, log-saver program, and versioned file system with replication.",
+        tag: ["All", "Systems"],
+        stack: ["Python", "PyTorch", "Distributed Systems"],
+        gitUrl: "https://github.com/amritesh-dasari/CS425-Distributed-Systems-UIUC/tree/main/cs425_mp4",
     },
     {
         id: 3,
-        title: "Chat-Time",
-        description: "Coded a real-time chat website using React, Node.js and Appwrite Cloud that implemented client-server subscription for real-time messaging and allowed message deletion based on message IDs.",
-        tag: ["All", "Web"],
-        gitUrl: "https://github.com/amritesh-dasari/Chat-Time",
+        title: "BCFL: Blockchain Federated Learning",
+        description: "Improved FL security by incorporating blockchain-based distributed ledger for model updates and replacing central server with PoW validators.",
+        tag: ["All", "Systems"],
+        stack: ["Python", "gRPC", "Blockchain"],
+        gitUrl: "https://gitlab.engr.illinois.edu/mdasari2/cs-525-research",
     },
     {
         id: 4,
-        title: "FCC-HFTracer",
-        description: "Developed a website visualization of publicly available FCC data between locations using indexing to optimize complex queries hosted on a GCP server and SQL instance.",
+        title: "Chat-Time",
+        description: "Real-time chat application using React, Node.js and Appwrite with client-server subscription for instant messaging.",
         tag: ["All", "Web"],
-        gitUrl: "https://github.com/amritesh-dasari/FCC-HFTracer",
+        stack: ["React", "Node.js", "Appwrite"],
+        gitUrl: "https://github.com/amritesh-dasari/Chat-Time",
     },
     {
         id: 5,
-        title: "Distributed Machine Learning Cluster",
-        description: "Implemented a distributed machine learning system with 10 nodes having integrated failure detection using a logsaver program and versioned file system with replication for efficient storage and maintenance.",
-        tag: ["All", "System Design"],
-        gitUrl: "https://github.com/amritesh-dasari/CS425-Distributed-Systems-UIUC/tree/main/cs425_mp4",
+        title: "SecureDNS Validator",
+        description: "DNS record validator and generator for DMARC, DKIM, and SPF compliance with guided record generation.",
+        tag: ["All", "Web"],
+        stack: ["Python", "Flask", "AWS Lambda"],
+        gitUrl: "https://github.com/amritesh-dasari/",
     },
     {
         id: 6,
         title: "VTOP Extended",
-        description: "Developed an Android application for Vellore Institute of Technology with authentication, clubs, events, faculty database and additional features like web view of campus portal, online quizzes using Flutter and Firebase.",
-        tag: ["All", "Mobile"],
+        description: "Campus companion app for VIT with authentication, clubs, events, faculty database, and online quizzes.",
+        tag: ["All", "AI"],
+        stack: ["Flutter", "Firebase"],
         gitUrl: "https://github.com/amritesh-dasari/VTOP-Extended",
     },
-    {
-        id: 7,
-        title: "BCFL: Blockchain based Federated Learning",
-        description: "Researched improving security and reliability of Federated Learning by incorporating a blockchain-based distributed ledger for model update record-keeping and replacing the central server with Proof-of-Work validated miners.",
-        tag: ["All", "System Design"],
-        gitUrl: "https://gitlab.engr.illinois.edu/mdasari2/cs-525-research",
-    },
-    {
-        id: 8,
-        title: "notsosimpletictactoe",
-        description: "Mobile Tic-Tac-Toe game built with Flutter uses minimax algorithm for AI opponent to allow single player mode.",
-        tag: ["All", "Mobile"],
-        gitUrl: "https://github.com/amritesh-dasari/notsosimpletictactoe",
-    },
-    {
-        id: 9,
-        title: "Diabetic Retinopathy Diagnosis",
-        description: "Mobile App developed using TensorFlow Lite and Flutter that allows user to upload fundus images to check if a person is suffering from Diabetic Retinopathy. The Model has an accuracy of 91% based on publicly available datasets.",
-        tag: ["All", "Mobile"],
-        gitUrl: "https://github.com/amritesh-dasari/Diabetic-Retinopathy-Diagnosis",
-    },
-    {
-        id: 10,
-        title: "Blog Application",
-        description: "Backend REST API implementation for a Blog Application based on Spring Boot and MySQL.",
-        tag: ["All", "Web"],
-        gitUrl: "https://github.com/amritesh-dasari/Springboot-Blog",
-    },
-]
+];
 
 const ProjectsSection = () => {
     const [tag, setTag] = useState("All");
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true });
-
-    const handleTagChange = (newTag) => {
-        setTag(newTag);
-    };
+    const isInView = useInView(ref, { once: true, amount: 0.2 });
 
     const filteredProjects = projectsData.filter((project) =>
         project.tag.includes(tag)
     );
 
     const cardVariants = {
-        initial: { y: 50, opacity: 0 },
-        animate: { y: 0, opacity: 1 },
-        hover: { y: -10, transition: { duration: 0.3 } }
-    };
-
-    const titleVariants = {
-        hidden: { opacity: 0, y: -20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
-        }
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2,
-            }
-        }
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
     };
 
     return (
-        <section id="projects">
-            <motion.h2 
-                className="text-center text-4xl font-bold text-white mt-4 mb-8 md:mb-12 bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent"
-                variants={titleVariants}
+        <section id="projects" className="py-16 lg:py-24">
+            <motion.div
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1 }}
+                variants={staggerContainer}
             >
-                My Projects
-            </motion.h2>
-            <motion.div 
-                className="text-white w-full flex flex-row justify-center items-center gap-3 md:gap-4 py-6 flex-wrap text-center"
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-            >
-                <ProjectTag
-                    onClick={handleTagChange}
-                    name="All"
-                    isSelected={tag === "All"}
-                />
-                <ProjectTag
-                    onClick={handleTagChange}
-                    name="AI"
-                    isSelected={tag === "AI"}
-                />
-                <ProjectTag
-                    onClick={handleTagChange}
-                    name="System Design"
-                    isSelected={tag === "System Design"}
-                />
-                <ProjectTag
-                    onClick={handleTagChange}
-                    name="Web"
-                    isSelected={tag === "Web"}
-                />
-                <ProjectTag
-                    onClick={handleTagChange}
-                    name="Mobile"
-                    isSelected={tag === "Mobile"}
-                />
-            </motion.div>
-            <motion.ul 
-                ref={ref} 
-                className="grid md:grid-cols-3 gap-8 md:gap-12"
-                variants={containerVariants}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-            >
-                {filteredProjects.map((project, index) => (
-                    <motion.li
-                        key={index}
-                        variants={cardVariants}
-                        initial="initial"
-                        animate={isInView ? "animate" : "initial"}
-                        whileHover="hover"
-                        transition={{ duration: 0.3, delay: index * 0.15 }}
-                    >
-                        <ProjectCard
-                            key={project.id}
-                            title={project.title}
-                            description={project.description}
-                            gitUrl={project.gitUrl}
+                {/* Section header */}
+                <motion.div className="mb-8" variants={fadeUp}>
+                    <h2 className="text-3xl lg:text-4xl font-semibold text-text-primary mb-4">
+                        Projects
+                    </h2>
+                    <motion.div variants={lineScale} className="w-12 h-0.5 bg-accent-primary mb-6" />
+                </motion.div>
+
+                {/* Filter tags */}
+                <motion.div
+                    className="flex flex-wrap gap-3 mb-10"
+                    variants={fadeUp}
+                >
+                    {['All', 'Systems', 'AI', 'Web'].map((tagName) => (
+                        <ProjectTag
+                            key={tagName}
+                            onClick={() => setTag(tagName)}
+                            name={tagName}
+                            isSelected={tag === tagName}
                         />
-                    </motion.li>
-                ))}
-            </motion.ul>
+                    ))}
+                </motion.div>
+
+                {/* Projects grid */}
+                <motion.ul
+                    ref={ref}
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                    {filteredProjects.map((project, index) => (
+                        <motion.li
+                            key={project.id}
+                            variants={cardVariants}
+                            initial="hidden"
+                            animate={isInView ? "visible" : "hidden"}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            <ProjectCard
+                                title={project.title}
+                                description={project.description}
+                                gitUrl={project.gitUrl}
+                                tags={project.stack}
+                            />
+                        </motion.li>
+                    ))}
+                </motion.ul>
+            </motion.div>
         </section>
     );
 };
 
-export default ProjectsSection
+export default ProjectsSection;

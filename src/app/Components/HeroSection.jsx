@@ -1,205 +1,157 @@
 "use client";
-import React, { useMemo, useRef } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { TypeAnimation } from 'react-type-animation';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { fadeUp, staggerContainer, lineScale } from '../lib/animations';
 
 const HeroSection = () => {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start end", "end start"],
-  });
-  const blobY = useTransform(scrollYProgress, [0, 1], [0, -40]);
-  const blobX = useTransform(scrollYProgress, [0, 1], [0, 28]);
-  const shapeY = useTransform(scrollYProgress, [0, 1], [0, 32]);
-  const shapeX = useTransform(scrollYProgress, [0, 1], [0, -18]);
-  const shapeWanders = useMemo(() => [
-    {
-      size: 380,
-      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(96,165,250,0.3),rgba(76,29,149,0))] blur-3xl',
-      animate: {
-        x: [0, 18, -14, 0],
-        y: [0, -16, 10, 0],
-        scale: [1, 1.04, 0.98, 1],
-      },
-      duration: 18 + Math.random() * 6,
-      style: { top: "-8%", left: "-12%" },
-      parallax: { x: blobX, y: blobY },
-    },
-    {
-      size: 440,
-      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.28),rgba(14,165,233,0))] blur-3xl',
-      animate: {
-        x: [0, -20, 16, 0],
-        y: [0, 18, -14, 0],
-        scale: [1, 1.03, 0.99, 1],
-      },
-      duration: 20 + Math.random() * 6,
-      style: { bottom: "-18%", right: "-14%" },
-      parallax: { x: shapeX, y: shapeY },
-    },
-    {
-      size: 220,
-      className: 'pointer-events-none absolute z-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(236,72,153,0.26),rgba(59,130,246,0))] blur-3xl',
-      animate: {
-        x: [0, 14, -10, 0],
-        y: [0, -14, 12, 0],
-        scale: [1, 1.05, 0.97, 1],
-      },
-      duration: 16 + Math.random() * 6,
-      style: { top: "32%", right: "16%" },
-      parallax: { x: shapeX, y: blobY },
-    },
-  ], [blobX, blobY, shapeX, shapeY]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-    float: {
-      y: [0, -15, 0],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+  const quickStats = [
+    { label: 'Experience', value: '2+ years', detail: 'Systems and Cloud Solutions Architect' },
+    { label: 'Currently', value: 'SDE @ Princeton IT Services', detail: 'Learning. Building. Growing.' },
+  ];
 
   const buttonVariants = {
-    hover: {
-      scale: 1.05,
-      transition: { duration: 0.2 },
-    },
+    rest: { scale: 1 },
+    hover: { scale: 1.02, transition: { duration: 0.2 } },
     tap: { scale: 0.98 },
   };
 
   return (
-    <section id="home" ref={heroRef} className='lg:py-16 relative'>
-      {/* Parallax shapes behind hero */}
-      {shapeWanders.map((shape, idx) => (
+    <section id="home" className='relative min-h-screen snap-start scroll-mt-24 pt-24 pb-12 flex items-center'>
+      <div className="absolute inset-x-0 top-6 -z-10">
+        <div className="mx-auto h-64 w-[80%] max-w-5xl rounded-full bg-gradient-to-r from-accent-primary/10 via-transparent to-accent-primary/10 blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto w-full py-14 lg:py-20">
         <motion.div
-          key={idx}
-          className="pointer-events-none absolute z-0"
-          style={{ ...shape.style, x: shape.parallax.x, y: shape.parallax.y }}
-        >
-          <motion.div
-            className={shape.className}
-            style={{ width: shape.size, height: shape.size }}
-            animate={shape.animate}
-            transition={{ duration: shape.duration, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-      ))}
-      <motion.div
-        className='grid grid-cols-1 sm:grid-cols-12'
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div className='col-span-7 place-self-center text-center sm:text-left' variants={itemVariants}>
-          <h1 className='text-white mb-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold'>
-            <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-red-400'>Hello, I&apos;m{" "}</span>
-            <br />
-            <TypeAnimation
-              sequence={[
-                'Mohan Amritesh',
-                1000,
-                'Distributed Systems Dev',
-                1000,
-                'Agentic AI Engineer',
-                1000,
-                'Backend Developer',
-                1000,
-                'Data Engineer',
-                1000
-              ]}
-              wrapper="span"
-              speed={30}
-              repeat={Infinity}
-            />
-          </h1>
-          <motion.p 
-            className='text-[#ADB7BE] text-base sm:text-lg mt-4 mb-6 lg:text-xl'
-            variants={itemVariants}
-          >
-            Ingesting new knowledge and leveling up - one message at a time from the Kafka queue of experience.
-          </motion.p>
-          <motion.div variants={itemVariants}>
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonVariants}
-              className='inline-block'
-            >
-              <Link href="mailto:dmamritesh@gmail.com" className='px-6 py-3 w-full sm:w-fit rounded-full mr-4 bg-gradient-to-br from-blue-500 via-purple-500 to-red-500 hover:shadow-lg hover:shadow-purple-500/50 text-white transition-shadow duration-300'>
-                Contact
-              </Link>
-            </motion.div>
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonVariants}
-              className='inline-block mt-3 sm:mt-0'
-            >
-              <Link href="https://drive.google.com/file/d/1SrO4j8d-Np81Mh2x0hQdJNxvgmtxce3V/view?usp=sharing">
-                <button className='px-1 py-1 w-full sm:w-fit rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-red-500 hover:shadow-lg hover:shadow-purple-500/50 text-white transition-shadow duration-300'>
-                  <span className='block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2'>Resume</span>
-                </button>
-              </Link>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-        <motion.div 
-          className='col-span-5 place-self-center mt-4 lg:mt-0'
-          variants={imageVariants}
+          className='grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full'
+          variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          <motion.div 
-            className='rounded-full bg-[#181818] w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] relative overflow-clip shadow-2xl shadow-purple-500/20'
-            animate="float"
-          >
-            <Image src="/images/Himemoji.png"
-              alt='Hi Memoji'
-              className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
-              width={300}
-              height={300}
+          {/* Text content */}
+          <motion.div className='lg:col-span-7 space-y-6'>
+            {/* Role label with typing animation */}
+            <motion.div variants={fadeUp}>
+              <TypeAnimation
+                sequence={[
+                  'Distributed Systems Developer',
+                  2000,
+                  'Agentic AI Engineer',
+                  2000,
+                  'Backend Software Engineer',
+                  2000,
+                  'Cloud Solutions Architect',
+                  2000,
+                ]}
+                wrapper="span"
+                speed={40}
+                repeat={Infinity}
+                className="text-base sm:text-lg font-semibold tracking-[0.3em] uppercase text-accent-primary/90"
+              />
+            </motion.div>
+
+            {/* Name */}
+            <motion.h1
+              variants={fadeUp}
+              className='text-5xl sm:text-6xl lg:text-7xl font-bold text-text-primary tracking-tighter leading-tight'
+            >
+              Mohan Amritesh Dasari
+            </motion.h1>
+
+            {/* Accent line */}
+            <motion.div
+              variants={lineScale}
+              className='w-20 h-1 bg-accent-primary rounded-full'
             />
+
+            {/* Tagline */}
+            <motion.p
+              variants={fadeUp}
+              className='text-lg sm:text-xl text-text-secondary max-w-2xl leading-relaxed'
+            >
+              Ingesting new knowledge and leveling up - one message at a time from the Kafka queue of experience.
+            </motion.p>
+
+            <motion.p
+              variants={fadeUp}
+              className='text-base sm:text-lg text-text-tertiary max-w-2xl leading-relaxed'
+            >
+              Software engineer focused on backend, data, and platform layers. I build reliable services, tighten feedback loops with automation, and keep latency predictable at scale.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div variants={fadeUp} className='flex flex-wrap gap-3 pt-1'>
+              <motion.div
+                variants={buttonVariants}
+                initial="rest"
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <Link
+                  href="mailto:dmamritesh@gmail.com"
+                  className='inline-block px-6 py-3 text-base bg-accent-primary text-background-primary font-semibold rounded-lg hover:bg-accent-secondary transition-colors duration-300 shadow-[0_10px_30px_-12px_rgba(245,158,11,0.45)]'
+                >
+                  Get in Touch
+                </Link>
+              </motion.div>
+              <motion.div
+                variants={buttonVariants}
+                initial="rest"
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <Link
+                  href="https://drive.google.com/file/d/1SrO4j8d-Np81Mh2x0hQdJNxvgmtxce3V/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='inline-block px-6 py-3 text-base border border-border-default text-text-primary font-semibold rounded-lg hover:border-border-hover hover:bg-background-hover transition-all duration-300'
+                >
+                  View Resume
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            {/* Quick stats */}
+            <motion.div variants={fadeUp} className='grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2'>
+              {quickStats.map((item) => (
+                <div
+                  key={item.label}
+                  className='p-4 rounded-xl border border-border-subtle bg-background-secondary/60 backdrop-blur-sm'
+                >
+                  <p className='text-xs uppercase tracking-wide text-text-tertiary'>{item.label}</p>
+                  <p className='text-lg font-semibold text-text-primary leading-tight'>{item.value}</p>
+                  <p className='text-sm text-text-secondary'>{item.detail}</p>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Profile image */}
+          <motion.div
+            className='lg:col-span-5 flex justify-center lg:justify-end origin-center lg:origin-right'
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{ opacity: 1, scale: 1.5 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className='relative'>
+              {/* Subtle accent glow behind image */}
+              <div className='absolute -inset-1 bg-gradient-to-br from-accent-primary/20 via-accent-primary/5 to-transparent rounded-2xl blur-xl' />
+              <div className='relative w-[240px] h-[240px] lg:w-[320px] lg:h-[320px] rounded-2xl overflow-hidden border border-border-subtle'>
+                <Image
+                  src="/images/Amritesh.jpeg"
+                  alt='Amritesh Dasari'
+                  fill
+                  className='object-cover'
+                  priority
+                />
+              </div>
+            </div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
