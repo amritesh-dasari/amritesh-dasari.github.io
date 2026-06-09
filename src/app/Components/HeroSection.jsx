@@ -1,159 +1,220 @@
 "use client";
-import React from 'react'
-import Image from 'next/image'
-import { TypeAnimation } from 'react-type-animation';
+import React, { useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { fadeUp, staggerContainer, lineScale } from '../lib/animations';
+import { TypeAnimation } from 'react-type-animation';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { LetterReveal } from './TextReveal';
+import MagneticButton from './MagneticButton';
+import Counter from './Counter';
+import { blurUp, fadeUp, fadeIn, stagger } from '../lib/animations';
+
+const STATS = [
+  { value: 2, suffix: '+', label: 'years in production' },
+  { value: 12, suffix: '+', label: 'projects shipped' },
+  { value: 35, suffix: '+', label: 'technologies explored' },
+];
 
 const HeroSection = () => {
-  const quickStats = [
-    { label: 'Experience', value: '2+ years', detail: 'Systems and Cloud Solutions Architect' },
-    { label: 'Currently', value: 'SDE @ Princeton IT Services', detail: 'Learning. Building. Growing.' },
-  ];
+  const sectionRef = useRef(null);
 
-  const buttonVariants = {
-    rest: { scale: 1 },
-    hover: { scale: 1.02, transition: { duration: 0.2 } },
-    tap: { scale: 0.98 },
-  };
+  // Parallax: the portrait scrolls slower than the copy, the glow slower still.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
-    <section id="home" className='relative min-h-screen snap-start scroll-mt-24 pt-24 pb-12 flex items-center'>
-      <div className="absolute inset-x-0 top-6 -z-10">
-        <div className="mx-auto h-64 w-[80%] max-w-5xl rounded-full bg-gradient-to-r from-accent-primary/10 via-transparent to-accent-primary/10 blur-3xl" />
-      </div>
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative flex min-h-screen items-center overflow-x-clip pt-28 pb-20 scroll-mt-24"
+    >
+      {/* Drifting backdrop glow */}
+      <motion.div className="absolute inset-x-0 top-10 -z-10" style={{ y: glowY }}>
+        <div className="mx-auto h-72 w-[80%] max-w-5xl rounded-full bg-gradient-to-r from-accent-primary/10 via-transparent to-accent-primary/10 blur-3xl" />
+      </motion.div>
 
-      <div className="max-w-7xl mx-auto w-full py-14 lg:py-20">
+      <div className="mx-auto w-full max-w-7xl px-6 lg:px-12">
         <motion.div
-          className='grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full'
-          variants={staggerContainer}
+          className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-12"
           initial="hidden"
           animate="visible"
+          variants={stagger(0.14, 0.2)}
         >
-          {/* Text content */}
-          <motion.div className='lg:col-span-7 space-y-6'>
-            {/* Role label with typing animation */}
-            <motion.div variants={fadeUp}>
+          {/* Story copy */}
+          <div className="space-y-7 lg:col-span-7">
+            {/* Opening line */}
+            <motion.div
+              variants={fadeIn}
+              className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-text-tertiary"
+            >
+              <span className="h-px w-10 bg-accent-primary/60" />
+              <span>
+                Prologue <span className="text-accent-primary">//</span> every system tells a story
+              </span>
+            </motion.div>
+
+            {/* Name */}
+            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight text-text-primary sm:text-6xl lg:text-7xl xl:text-8xl">
+              <LetterReveal text="Mohan Amritesh" delay={0.35} />
+              <br />
+              <LetterReveal text="Dasari" delay={0.85} />
+              <motion.span
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, type: 'spring', stiffness: 260, damping: 14 }}
+                className="inline-block text-accent-primary"
+              >
+                .
+              </motion.span>
+            </h1>
+
+            {/* Rotating roles */}
+            <motion.div variants={fadeUp} className="font-mono text-sm sm:text-base">
+              <span className="text-text-tertiary">$ whoami </span>
               <TypeAnimation
                 sequence={[
                   'Distributed Systems Developer',
-                  2000,
+                  2200,
                   'Agentic AI Engineer',
-                  2000,
+                  2200,
                   'Backend Software Engineer',
-                  2000,
+                  2200,
                   'Cloud Solutions Architect',
-                  2000,
+                  2200,
                 ]}
                 wrapper="span"
                 speed={40}
                 repeat={Infinity}
-                className="text-base sm:text-lg font-semibold tracking-[0.3em] uppercase text-accent-primary/90"
+                className="font-semibold uppercase tracking-[0.2em] text-accent-primary"
               />
             </motion.div>
 
-            {/* Name */}
-            <motion.h1
-              variants={fadeUp}
-              className='text-5xl sm:text-6xl lg:text-7xl font-bold text-text-primary tracking-tighter leading-tight'
-            >
-              Mohan Amritesh Dasari
-            </motion.h1>
-
-            {/* Accent line */}
-            <motion.div
-              variants={lineScale}
-              className='w-20 h-1 bg-accent-primary rounded-full'
-            />
-
-            {/* Tagline */}
+            {/* The hook */}
             <motion.p
-              variants={fadeUp}
-              className='text-lg sm:text-xl text-text-secondary max-w-2xl leading-relaxed'
+              variants={blurUp}
+              className="max-w-2xl font-display text-xl italic leading-relaxed text-text-secondary sm:text-2xl"
             >
-              Ingesting new knowledge and leveling up - one message at a time from the Kafka queue of experience.
+              &ldquo;Ingesting new knowledge and leveling up — one message at a time from the
+              Kafka queue of experience.&rdquo;
             </motion.p>
 
             <motion.p
               variants={fadeUp}
-              className='text-base sm:text-lg text-text-tertiary max-w-2xl leading-relaxed'
+              className="max-w-2xl text-base leading-relaxed text-text-tertiary sm:text-lg"
             >
-              Software engineer focused on backend, data, and platform layers. I build reliable services, tighten feedback loops with automation, and keep latency predictable at scale.
+              Software engineer focused on backend, data, and platform layers. I build reliable
+              services, tighten feedback loops with automation, and keep latency predictable at
+              scale.
             </motion.p>
 
             {/* CTAs */}
-            <motion.div variants={fadeUp} className='flex flex-wrap gap-3 pt-1'>
-              <motion.div
-                variants={buttonVariants}
-                initial="rest"
-                whileHover="hover"
-                whileTap="tap"
-              >
+            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-4 pt-1">
+              <MagneticButton>
                 <Link
                   href="mailto:dmamritesh@gmail.com"
-                  className='inline-block px-6 py-3 text-base bg-accent-primary text-background-primary font-semibold rounded-lg hover:bg-accent-secondary transition-colors duration-300 shadow-[0_10px_30px_-12px_rgba(245,158,11,0.45)]'
+                  className="inline-block rounded-lg bg-accent-primary px-6 py-3 text-base font-semibold text-background-primary shadow-[0_10px_30px_-12px_rgba(245,158,11,0.45)] transition-colors duration-300 hover:bg-accent-secondary"
                 >
-                  Get in Touch
+                  Begin the Conversation
                 </Link>
-              </motion.div>
-              <motion.div
-                variants={buttonVariants}
-                initial="rest"
-                whileHover="hover"
-                whileTap="tap"
-              >
+              </MagneticButton>
+              <MagneticButton>
                 <Link
                   href="https://drive.google.com/file/d/1SrO4j8d-Np81Mh2x0hQdJNxvgmtxce3V/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className='inline-block px-6 py-3 text-base border border-border-default text-text-primary font-semibold rounded-lg hover:border-border-hover hover:bg-background-hover transition-all duration-300'
+                  className="inline-block rounded-lg border border-border-default px-6 py-3 text-base font-semibold text-text-primary transition-all duration-300 hover:border-border-hover hover:bg-background-hover"
                 >
-                  View Resume
+                  Read the Résumé
                 </Link>
-              </motion.div>
+              </MagneticButton>
             </motion.div>
 
-            {/* Quick stats */}
-            <motion.div variants={fadeUp} className='grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2'>
-              {quickStats.map((item) => (
-                <div
-                  key={item.label}
-                  className='p-4 rounded-xl border border-border-subtle bg-background-secondary/60 backdrop-blur-sm'
-                >
-                  <p className='text-xs uppercase tracking-wide text-text-tertiary'>{item.label}</p>
-                  <p className='text-lg font-semibold text-text-primary leading-tight'>{item.value}</p>
-                  <p className='text-sm text-text-secondary'>{item.detail}</p>
+            {/* The story so far, in numbers */}
+            <motion.div
+              variants={fadeUp}
+              className="grid grid-cols-3 gap-4 border-t border-border-subtle pt-6 sm:max-w-xl"
+            >
+              {STATS.map((stat) => (
+                <div key={stat.label}>
+                  <p className="font-display text-3xl font-semibold text-text-primary sm:text-4xl">
+                    <Counter to={stat.value} suffix={stat.suffix} />
+                  </p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-text-tertiary sm:text-xs">
+                    {stat.label}
+                  </p>
                 </div>
               ))}
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Profile image */}
+          {/* Portrait */}
           <motion.div
-            className='lg:col-span-5 flex justify-center lg:justify-end origin-center lg:origin-right'
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{ opacity: 1, scale: 1.5 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="flex justify-center lg:col-span-5 lg:justify-end"
+            style={{ y: portraitY }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className='relative'>
-              {/* Subtle accent glow behind image */}
-              <div className='absolute -inset-1 bg-gradient-to-br from-accent-primary/20 via-accent-primary/5 to-transparent rounded-2xl blur-xl' />
-              <div className='relative w-[240px] h-[240px] lg:w-[320px] lg:h-[320px] rounded-2xl overflow-hidden border border-border-subtle'>
+            <div className="group relative">
+              {/* Glow */}
+              <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-accent-primary/25 via-accent-primary/5 to-transparent blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+
+              {/* Corner brackets */}
+              <span className="absolute -top-3 -left-3 h-8 w-8 border-t-2 border-l-2 border-accent-primary/70 transition-all duration-500 group-hover:-top-4 group-hover:-left-4" />
+              <span className="absolute -bottom-3 -right-3 h-8 w-8 border-b-2 border-r-2 border-accent-primary/70 transition-all duration-500 group-hover:-bottom-4 group-hover:-right-4" />
+
+              <div className="relative h-[280px] w-[280px] overflow-hidden rounded-2xl border border-border-subtle lg:h-[360px] lg:w-[360px]">
                 <Image
                   src="/images/Amritesh.jpeg"
-                  alt='Amritesh Dasari'
+                  alt="Amritesh Dasari"
                   fill
-                  className='object-cover'
+                  className="object-cover grayscale-[35%] transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
                   priority
                 />
               </div>
+
+              {/* Status badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ x: '-50%' }}
+                transition={{ delay: 1.6, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute -bottom-5 left-1/2 flex w-max max-w-[calc(100vw-3rem)] items-center gap-2 rounded-full border border-border-subtle bg-background-secondary/90 px-4 py-2 backdrop-blur-sm"
+              >
+                <span className="h-2 w-2 shrink-0 animate-pulse-dot rounded-full bg-accent-primary" />
+                <span className="truncate whitespace-nowrap font-mono text-[10px] text-text-secondary sm:text-xs">
+                  Currently · SDE @ Princeton IT Services
+                </span>
+              </motion.div>
             </div>
           </motion.div>
         </motion.div>
       </div>
-    </section>
-  )
-}
 
-export default HeroSection
+      {/* Scroll cue */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        style={{ opacity: cueOpacity }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+      >
+        <div className="flex flex-col items-center gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
+            Scroll to begin
+          </span>
+          <span className="block h-10 w-px overflow-hidden bg-border-subtle">
+            <span className="block h-full w-full animate-scroll-line bg-accent-primary" />
+          </span>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+export default HeroSection;

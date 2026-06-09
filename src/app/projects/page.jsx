@@ -1,15 +1,20 @@
 "use client";
 
+import Link from "next/link";
+import { motion } from "framer-motion";
 import BackgroundFX from "../Components/BackgroundFX";
 import NavBar from "../Components/NavBar";
-import { motion } from "framer-motion";
-import { fadeUp, staggerContainer, lineScale } from "../lib/animations";
+import StoryRail from "../Components/StoryRail";
+import { WordReveal } from "../Components/TextReveal";
+import { fadeUp, fadeIn, slideRight, stagger, VIEWPORT_SHALLOW } from "../lib/animations";
 
-const PROJECT_SECTIONS = [
+const VOLUMES = [
   {
+    numeral: "I",
     title: "Princeton IT Services",
     subtitle: "Software Development Engineer",
-    period: "Feb 2024 - Present",
+    period: "Feb 2024 — Present",
+    blurb: "The current chapter — enterprise systems shipped for real clients.",
     items: [
       {
         name: "NOVA - Teams AI Chatbot",
@@ -69,9 +74,11 @@ const PROJECT_SECTIONS = [
     ]
   },
   {
+    numeral: "II",
     title: "Blinkit (previously Grofers)",
     subtitle: "Software Development Engineering Intern",
-    period: "Jan 2022 - Jul 2022",
+    period: "Jan 2022 — Jul 2022",
+    blurb: "The first production push — systems at quick-commerce scale.",
     items: [
       {
         name: "Live Order Tracking",
@@ -80,7 +87,7 @@ const PROJECT_SECTIONS = [
         bullets: [
           "Built a live order tracking feature with real-time location plotting for delivery updates.",
           "Helped deploy Nyaala, a new message delivery service replacing the older messaging queue.",
-          "integrated the tracking polyline to the frontend CRM Dashboard used by customer support agents."
+          "Integrated the tracking polyline to the frontend CRM Dashboard used by customer support agents."
         ]
       },
       {
@@ -96,7 +103,11 @@ const PROJECT_SECTIONS = [
     ]
   },
   {
+    numeral: "III",
     title: "Personal Projects",
+    subtitle: "Built after hours, for the love of it",
+    period: "Ongoing",
+    blurb: "Side quests — where the riskiest ideas get tried first.",
     items: [
       {
         name: "Distributed Machine Learning Cluster",
@@ -158,108 +169,125 @@ const PROJECT_SECTIONS = [
 ];
 
 export default function ProjectsPage() {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-    }
-  };
-
   return (
-    <main className="flex min-h-screen flex-col bg-background-primary relative overflow-hidden">
+    <main className="relative min-h-screen overflow-x-clip bg-background-primary">
       <BackgroundFX />
+      <StoryRail />
       <NavBar />
 
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 w-full mt-20 mb-12 relative">
-        {/* Page header */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-32 pb-20 lg:px-12">
+        {/* Header */}
         <motion.header
-          className="mb-8"
+          className="relative mb-16"
           initial="hidden"
           animate="visible"
-          variants={staggerContainer}
+          variants={stagger(0.12, 0.1)}
         >
-          <motion.h1
-            variants={fadeUp}
-            className="text-3xl lg:text-4xl font-bold text-text-primary mb-3"
+          <span
+            className="text-ghost pointer-events-none absolute -top-10 -left-2 select-none font-display text-[7rem] font-bold leading-none lg:text-[10rem]"
+            aria-hidden="true"
           >
-            Projects
-          </motion.h1>
-          <motion.div variants={lineScale} className="w-12 h-0.5 bg-accent-primary mb-4" />
-          <motion.p
+            A–Z
+          </span>
+
+          <motion.div
             variants={fadeUp}
-            className="text-base text-text-secondary w-full"
+            className="relative mb-4 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.3em]"
           >
-            A detailed overview of my professional and personal projects.
+            <span className="text-accent-primary">The Archive</span>
+            <span className="h-px w-16 bg-gradient-to-r from-accent-primary/60 to-transparent" />
+            <span className="text-text-tertiary">complete works</span>
+          </motion.div>
+
+          <h1 className="relative font-display text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+            <WordReveal text="Every story, catalogued." amount={0.2} />
+          </h1>
+
+          <motion.p variants={fadeUp} className="relative mt-5 max-w-2xl text-lg text-text-secondary">
+            The full record of professional and personal projects — three volumes, in reverse
+            chronological order.
           </motion.p>
+
+          <motion.div variants={fadeUp} className="relative mt-6">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 font-mono text-sm text-text-tertiary transition-colors duration-300 hover:text-accent-primary"
+            >
+              <span aria-hidden="true">←</span> back to the story
+            </Link>
+          </motion.div>
         </motion.header>
 
-        {/* Project sections */}
-        <div className="space-y-8">
-          {PROJECT_SECTIONS.map((section) => (
-            <motion.div
-              key={section.title}
+        {/* Volumes */}
+        <div className="space-y-20">
+          {VOLUMES.map((volume) => (
+            <motion.section
+              key={volume.title}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              variants={staggerContainer}
-              className="rounded-xl border border-border-subtle bg-background-secondary p-5 lg:p-6"
+              viewport={VIEWPORT_SHALLOW}
+              variants={stagger(0.1)}
+              className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12"
             >
-              {/* Section header */}
-              <motion.div variants={fadeUp} className="mb-4">
-                <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-text-primary">
-                      {section.title}
-                    </h2>
-                    {section.subtitle && (
-                      <p className="text-text-tertiary">{section.subtitle}</p>
-                    )}
-                  </div>
-                  {section.period && (
-                    <p className="text-sm text-text-tertiary mt-1 md:mt-0">
-                      {section.period}
-                    </p>
-                  )}
+              {/* Volume spine */}
+              <motion.div variants={fadeIn} className="lg:sticky lg:top-28 lg:self-start">
+                <div className="relative border-l-2 border-accent-primary/40 pl-6">
+                  <span
+                    className="text-ghost-accent pointer-events-none absolute -top-8 right-0 select-none font-display text-[5rem] italic leading-none lg:-left-2 lg:right-auto lg:-top-10 lg:text-[6.5rem]"
+                    aria-hidden="true"
+                  >
+                    {volume.numeral}
+                  </span>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent-primary">
+                    Volume {volume.numeral}
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl font-semibold text-text-primary">
+                    {volume.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-text-secondary">{volume.subtitle}</p>
+                  <p className="mt-1 font-mono text-xs text-text-tertiary">{volume.period}</p>
+                  <p className="mt-4 font-display text-base italic leading-relaxed text-text-tertiary">
+                    {volume.blurb}
+                  </p>
                 </div>
               </motion.div>
 
-              {/* Project items */}
-              <div className="space-y-3">
-                {section.items.map((item) => (
+              {/* Entries */}
+              <div className="space-y-5">
+                {volume.items.map((item, index) => (
                   <motion.article
                     key={item.name}
-                    variants={cardVariants}
-                    className="rounded-lg border border-border-subtle bg-background-tertiary/50 p-4 hover:border-border-hover transition-colors duration-300"
+                    variants={slideRight}
+                    className="group rounded-xl border border-border-subtle bg-background-secondary/70 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-primary/30 hover:shadow-[0_24px_48px_-30px_rgba(245,158,11,0.3)]"
                   >
-                    {/* Project header */}
-                    <div className="flex flex-col gap-1.5 md:flex-row md:items-start md:justify-between mb-2">
-                      <div>
-                        <h3 className="text-base font-medium text-text-primary">
-                          {item.name}
-                        </h3>
-                        <p className="text-xs text-text-tertiary">{item.context}</p>
-                      </div>
-                      {item.stack?.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-1.5 md:mt-0">
-                          {item.stack.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-2 py-0.5 text-xs text-text-tertiary bg-background-primary rounded border border-border-subtle"
-                            >
-                              {tech}
-                            </span>
-                          ))}
+                    <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-mono text-xs text-text-tertiary transition-colors duration-300 group-hover:text-accent-primary">
+                          {volume.numeral}.{String(index + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <h3 className="font-display text-lg font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-primary">
+                            {item.name}
+                          </h3>
+                          <p className="text-xs text-text-tertiary">{item.context}</p>
                         </div>
-                      )}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 md:justify-end md:pl-4">
+                        {item.stack.map((tech) => (
+                          <span
+                            key={tech}
+                            className="rounded border border-border-subtle bg-background-primary px-2 py-0.5 font-mono text-[10px] text-text-tertiary"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    {/* Bullets */}
-                    <ul className="space-y-1 text-sm text-text-secondary">
+                    <ul className="space-y-1.5 text-sm leading-relaxed text-text-secondary">
                       {item.bullets.map((bullet, idx) => (
                         <li key={idx} className="flex gap-2">
-                          <span className="text-accent-primary mt-1 flex-shrink-0">•</span>
+                          <span className="mt-0.5 flex-shrink-0 text-accent-primary">›</span>
                           <span>{bullet}</span>
                         </li>
                       ))}
@@ -267,10 +295,27 @@ export default function ProjectsPage() {
                   </motion.article>
                 ))}
               </div>
-            </motion.div>
+            </motion.section>
           ))}
         </div>
-      </section>
+
+        {/* Footer */}
+        <motion.footer
+          className="mt-24 border-t border-border-subtle pt-8 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={fadeUp}
+        >
+          <p className="font-mono text-xs italic text-text-tertiary">
+            — end of archive · the story continues at{' '}
+            <Link href="/#contact" className="text-accent-primary hover:underline">
+              the epilogue
+            </Link>{' '}
+            —
+          </p>
+        </motion.footer>
+      </div>
     </main>
   );
 }

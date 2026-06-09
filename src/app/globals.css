@@ -24,6 +24,7 @@ body {
   color: var(--text-secondary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 /* ============ Selection ============ */
@@ -64,4 +65,67 @@ body {
 /* ============ Text Balance ============ */
 .text-balance {
   text-wrap: balance;
+}
+
+/* ============ Ghost (outlined) display text ============ */
+.text-ghost {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(250, 250, 250, 0.08);
+}
+
+.text-ghost-accent {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245, 158, 11, 0.18);
+}
+
+/* ============ Storybook drop cap ============ */
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 3.6em;
+  line-height: 0.82;
+  padding-right: 0.14em;
+  padding-top: 0.06em;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+/* ============ Marquee ============ */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-reverse .marquee-track {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track,
+  .animate-floaty,
+  .animate-pulse-dot,
+  .animate-scroll-line {
+    animation: none !important;
+  }
 }

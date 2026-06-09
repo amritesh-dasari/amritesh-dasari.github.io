@@ -1,4 +1,4 @@
-import { Instrument_Sans, JetBrains_Mono, Orbitron } from 'next/font/google'
+import { Instrument_Sans, JetBrains_Mono, Fraunces } from 'next/font/google'
 import './globals.css'
 
 const instrumentSans = Instrument_Sans({
@@ -13,15 +13,16 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500']
 })
 
-const orbitron = Orbitron({
+const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-display',
+  style: ['normal', 'italic'],
   display: 'swap'
 })
 
 export const metadata = {
   title: "Amritesh Dasari | Software Engineer",
-  description: 'Software engineer specializing in distributed systems and backend development.',
+  description: 'Software engineer specializing in distributed systems and backend development. Every reliable system tells a story — this one is mine.',
 }
 
 export default function RootLayout({ children }) {
@@ -31,7 +32,7 @@ export default function RootLayout({ children }) {
       className={[
         instrumentSans.variable,
         jetbrainsMono.variable,
-        orbitron.variable,
+        fraunces.variable,
       ].join(' ')}
     >
       <body className="font-sans bg-background-primary text-text-secondary antialiased">

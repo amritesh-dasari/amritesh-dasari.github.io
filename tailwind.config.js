@@ -45,6 +45,27 @@ module.exports = {
         wider: '0.1em',
         widest: '0.2em',
       },
+      keyframes: {
+        floaty: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        'pulse-dot': {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.4', transform: 'scale(0.8)' },
+        },
+        'scroll-line': {
+          '0%': { transform: 'scaleY(0)', transformOrigin: 'top' },
+          '45%': { transform: 'scaleY(1)', transformOrigin: 'top' },
+          '55%': { transform: 'scaleY(1)', transformOrigin: 'bottom' },
+          '100%': { transform: 'scaleY(0)', transformOrigin: 'bottom' },
+        },
+      },
+      animation: {
+        floaty: 'floaty 6s ease-in-out infinite',
+        'pulse-dot': 'pulse-dot 2s ease-in-out infinite',
+        'scroll-line': 'scroll-line 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite',
+      },
     },
   },
   plugins: [],

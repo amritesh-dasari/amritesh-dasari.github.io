@@ -1,198 +1,176 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react"
-import Link from "next/link"
-import NavLink from "./NavLink"
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid"
-import MenuOverlay from "./MenuOverlay";
-import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
-import { fadeDown, staggerContainer } from "../lib/animations";
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { EASE, fadeDown, stagger } from '../lib/animations';
 
-const navLinks = [
-    { title: "Home", href: "/#home", sectionId: "home" },
-    { title: "About", href: "/#about", sectionId: "about" },
-    { title: "Projects", href: "/#projects", sectionId: "projects" },
-    { title: "Contact", href: "/#contact", sectionId: "contact" },
+const NAV_ITEMS = [
+  { title: 'Prologue', num: '00', href: '/#home', id: 'home' },
+  { title: 'Origins', num: '01', href: '/#about', id: 'about' },
+  { title: 'Toolkit', num: '02', href: '/#skills', id: 'skills' },
+  { title: 'Journey', num: '03', href: '/#journey', id: 'journey' },
+  { title: 'The Work', num: '04', href: '/#projects', id: 'projects' },
+  { title: 'Epilogue', num: '05', href: '/#contact', id: 'contact' },
+  { title: 'Archive', num: '++', href: '/projects', id: null },
 ];
 
 const NavBar = () => {
-    const pathname = usePathname();
-    const sectionLinks = useMemo(() => navLinks.filter((link) => link.sectionId), []);
-    const [navbarOpen, setNavbarOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-    const [activeSection, setActiveSection] = useState(
-        pathname === "/" ? sectionLinks[0]?.sectionId ?? "" : ""
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!isHome) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-42% 0px -52% 0px' }
     );
-    const ignoreObserverRef = useRef(false);
+    NAV_ITEMS.forEach(({ id }) => {
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [isHome]);
 
-    const linkVariants = {
-        hidden: { opacity: 0, y: -10 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-    };
+  const isItemActive = (item) => {
+    if (!item.id) return pathname === item.href;
+    return isHome && activeSection === item.id;
+  };
 
-    const menuVariants = {
-        closed: { opacity: 0, height: 0 },
-        open: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
-    };
+  const mobileItem = {
+    hidden: { opacity: 0, x: -24 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: EASE } },
+  };
 
-    // Handle scroll for background change
-    useEffect(() => {
-        const scrollContainer = document.getElementById("page-scroll");
-        const target = scrollContainer || window;
-        const handleScroll = () => {
-            const scrollTop = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
-            setScrolled(scrollTop > 50);
-        };
-        handleScroll();
-        target.addEventListener('scroll', handleScroll);
-        return () => target.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    useEffect(() => {
-        const scrollContainer = document.getElementById("page-scroll");
-        const sections = sectionLinks
-            .map((link) => document.getElementById(link.sectionId))
-            .filter(Boolean);
-        if (!sections.length) return undefined;
-
-        const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (ignoreObserverRef.current) return;
-
-                if (
-                    typeof window !== "undefined" &&
-                    ((scrollContainer ? scrollContainer.scrollTop : window.scrollY || window.pageYOffset) <= 40) &&
-                    sectionLinks[0]
-                ) {
-                    setActiveSection(sectionLinks[0].sectionId);
-                    return;
-                }
-
-                let best = entries.reduce((acc, entry) => {
-                    if (!acc) return entry;
-                    if (entry.intersectionRatio > acc.intersectionRatio) return entry;
-                    if (entry.intersectionRatio === acc.intersectionRatio) {
-                        return Math.abs(entry.boundingClientRect.top) < Math.abs(acc.boundingClientRect.top) ? entry : acc;
-                    }
-                    return acc;
-                }, null);
-
-                if (best && best.isIntersecting) {
-                    setActiveSection(best.target.id);
-                    return;
-                }
-
-                const tops = sections.map((s) => ({ el: s, top: s.getBoundingClientRect().top }));
-                const below = tops.filter((t) => t.top >= 0).sort((a, b) => a.top - b.top)[0];
-                const above = tops.filter((t) => t.top < 0).sort((a, b) => b.top - a.top)[0];
-                const candidate = below || above;
-                if (candidate) setActiveSection(candidate.el.id);
-            },
-            {
-                threshold: thresholds,
-                root: scrollContainer || null,
-                rootMargin: "-40% 0px -40% 0px"
-            }
-        );
-
-        sections.forEach((section) => observer.observe(section));
-        return () => observer.disconnect();
-    }, [sectionLinks]);
-
-    const handleNavClick = (sectionId) => {
-        ignoreObserverRef.current = true;
-        setTimeout(() => {
-            setActiveSection(sectionId);
-            setTimeout(() => (ignoreObserverRef.current = false), 80);
-        }, 450);
-    };
-
-    return (
-        <motion.nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled
-                    ? 'bg-background-primary/80 backdrop-blur-md border-b border-border-subtle'
-                    : 'bg-transparent'
-            }`}
-            initial="hidden"
-            animate="visible"
-            variants={fadeDown}
+  return (
+    <motion.header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? 'border-b border-border-subtle bg-background-primary/80 backdrop-blur-md'
+          : 'border-b border-transparent bg-transparent'
+      }`}
+      initial="hidden"
+      animate="visible"
+      variants={fadeDown}
+    >
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-12">
+        {/* Logo */}
+        <Link
+          href="/"
+          className="group font-display text-2xl font-semibold tracking-tight text-text-primary transition-colors duration-300 hover:text-accent-primary"
         >
-            <div className='max-w-7xl mx-auto flex items-center justify-between px-6 py-5 w-full'>
-                {/* Logo */}
+          MAD
+          <span className="inline-block text-accent-primary transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            .
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <motion.ul
+          className="hidden items-center gap-7 md:flex"
+          variants={stagger(0.07, 0.2)}
+          initial="hidden"
+          animate="visible"
+        >
+          {NAV_ITEMS.map((item) => {
+            const active = isItemActive(item);
+            return (
+              <motion.li key={item.title} variants={fadeDown} className="relative">
                 <Link
-                    href='/'
-                    className='text-text-primary font-display font-semibold text-xl tracking-[0.12em] hover:text-accent-primary transition-colors duration-300'
+                  href={item.href}
+                  className={`group flex items-baseline gap-1.5 text-sm font-medium tracking-wide transition-colors duration-300 ${
+                    active ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
+                  }`}
                 >
-                    MAD
+                  <span
+                    className={`font-mono text-[10px] transition-colors duration-300 ${
+                      active ? 'text-accent-primary' : 'text-text-tertiary group-hover:text-accent-primary'
+                    }`}
+                  >
+                    {item.num}
+                  </span>
+                  {item.title}
                 </Link>
-
-                {/* Mobile menu button */}
-                <div className='md:hidden'>
-                    <button
-                        onClick={() => setNavbarOpen(!navbarOpen)}
-                        className='p-2 text-text-secondary hover:text-text-primary transition-colors duration-300'
-                        aria-label="Toggle menu"
-                    >
-                        {!navbarOpen ? <Bars3Icon className='h-6 w-6' /> : <XMarkIcon className='h-6 w-6' />}
-                    </button>
-                </div>
-
-                {/* Desktop navigation */}
-                <motion.ul
-                    className='hidden md:flex items-center gap-8'
-                    variants={staggerContainer}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    {navLinks.map((link, index) => {
-                        const isSectionLink = Boolean(link.sectionId);
-                        const isActive = isSectionLink
-                            ? activeSection === link.sectionId
-                            : pathname === link.href;
-
-                        return (
-                            <motion.li key={index} variants={linkVariants} className="relative">
-                                <NavLink
-                                    href={link.href}
-                                    title={link.title}
-                                    active={isActive}
-                                    onClick={isSectionLink ? () => handleNavClick(link.sectionId) : undefined}
-                                    sectionId={link.sectionId}
-                                    currentPath={pathname}
-                                />
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="nav-indicator"
-                                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent-primary rounded-full"
-                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                    />
-                                )}
-                            </motion.li>
-                        )
-                    })}
-                </motion.ul>
-            </div>
-
-            {/* Mobile menu overlay */}
-            <motion.div
-                variants={menuVariants}
-                initial="closed"
-                animate={navbarOpen ? "open" : "closed"}
-                className="md:hidden overflow-hidden bg-background-primary/95 backdrop-blur-md border-b border-border-subtle"
-            >
-                {navbarOpen && (
-                    <MenuOverlay
-                        links={navLinks}
-                        activeSection={activeSection}
-                        pathname={pathname}
-                        onNavigate={() => setNavbarOpen(false)}
-                    />
+                {active && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute -bottom-1.5 left-0 right-0 h-0.5 rounded-full bg-accent-primary"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
                 )}
-            </motion.div>
-        </motion.nav>
-    )
-}
+              </motion.li>
+            );
+          })}
+        </motion.ul>
 
-export default NavBar
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setMenuOpen((open) => !open)}
+          className="p-2 text-text-secondary transition-colors duration-300 hover:text-text-primary md:hidden"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            className="overflow-hidden border-b border-border-subtle bg-background-primary/95 backdrop-blur-md md:hidden"
+          >
+            <motion.ul
+              className="flex flex-col gap-1 px-6 py-4"
+              variants={stagger(0.06)}
+              initial="hidden"
+              animate="visible"
+            >
+              {NAV_ITEMS.map((item) => {
+                const active = isItemActive(item);
+                return (
+                  <motion.li key={item.title} variants={mobileItem}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`flex items-baseline gap-3 border-l-2 py-2.5 pl-4 transition-all duration-300 ${
+                        active
+                          ? 'border-accent-primary text-text-primary'
+                          : 'border-transparent text-text-secondary hover:border-border-hover hover:text-text-primary'
+                      }`}
+                    >
+                      <span className="font-mono text-xs text-accent-primary">{item.num}</span>
+                      <span className="text-base font-medium">{item.title}</span>
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
+  );
+};
+
+export default NavBar;
